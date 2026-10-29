@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Problem · AI Property Video Generator{% endblock %}
+
+{% block content %}
+<section class="panel panel--narrow">
+  <p class="eyebrow">Something needs your attention</p>
+  <h1>{{ error.message }}</h1>
+  {% if error.hint %}<p class="lede">{{ error.hint }}</p>{% endif %}
+  <p class="muted">Reference: <code>{{ error.code }}</code></p>
+  <div class="button-row">
+    <a class="btn btn--primary" href="/">Back to the generator</a>
+    <a class="btn btn--ghost" href="/settings">Open settings</a>
+  </div>
+</section>
+{% endblock %}

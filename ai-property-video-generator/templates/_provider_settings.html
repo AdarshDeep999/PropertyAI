@@ -1,0 +1,140 @@
+<section class="sheet" id="provider-settings">
+  <div class="sheet__head">
+    <div>
+      <h2>AI script provider</h2>
+      <p>Optional. Without a key the app writes its own template script — the video still renders.</p>
+    </div>
+  </div>
+
+  <div class="grid grid--2">
+    <div class="field">
+      <label for="llm-provider">Provider</label>
+      <select id="llm-provider">
+        {% for pid, provider in catalog.llm.items() %}
+          <option value="{{ pid }}" {{ 'selected' if settings.llm.provider == pid else '' }}>{{ provider.label }}</option>
+        {% endfor %}
+      </select>
+      <p class="field__hint" id="llm-provider-note"></p>
+    </div>
+    <div class="field">
+      <label for="llm-model">Model</label>
+      <input type="text" id="llm-model" list="llm-model-options" value="{{ settings.llm.model }}">
+      <datalist id="llm-model-options"></datalist>
+      <p class="field__hint">Use a model your key can access.</p>
+    </div>
+    <div class="field" id="llm-base-url-wrap">
+      <label for="llm-base-url">Base URL</label>
+      <input type="text" id="llm-base-url" value="{{ settings.llm.base_url }}"
+             placeholder="https://api.openai.com/v1">
+      <p class="field__hint">Required for OpenAI-compatible servers (Ollama: http://localhost:11434/v1).</p>
+    </div>
+  </div>
+
+  <div class="field" style="margin-top:16px">
+    <label for="llm-key">API key</label>
+    <div class="key-row">
+      <input type="password" id="llm-key" autocomplete="off" spellcheck="false"
+             placeholder="Paste a key to save it on the server">
+      <button type="button" class="btn btn--ghost btn--sm" id="llm-save-key">Save key</button>
+      <button type="button" class="btn btn--danger btn--sm" id="llm-remove-key">Remove key</button>
+    </div>
+    <p class="field__hint">
+      Keys are stored server-side in a restricted file (DPAPI-encrypted on Windows) and are never
+      included in a page, a response, or a log line.
+    </p>
+    <p class="status-line" id="llm-key-status" data-secret="gemini"></p>
+  </div>
+
+  <div class="btn-row" style="margin-top:16px">
+    <button type="button" class="btn btn--ghost" id="llm-test">Test connection</button>
+    <span class="small muted" id="llm-test-result"></span>
+  </div>
+</section>
+
+<section class="sheet">
+  <div class="sheet__head">
+    <div>
+      <h2>Voice-over engines</h2>
+      <p>Edge and Windows speech need no key. An explicit fallback is only used if the primary fails, and the app tells you when that happens.</p>
+    </div>
+  </div>
+
+  <div class="grid grid--2">
+    <div class="field">
+      <label for="tts-engine">Narration engine</label>
+      <select id="tts-engine">
+        {% for eid, engine in catalog.tts.items() %}
+          <option value="{{ eid }}" {{ 'selected' if settings.tts.engine == eid else '' }}>
+            {{ engine.label }}{{ ' — needs a key' if engine.requires_key else ' — free' }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label for="tts-voice">Voice</label>
+      <select id="tts-voice"></select>
+      <p class="field__hint" id="tts-engine-note"></p>
+    </div>
+    <div class="field">
+      <label for="tts-fallback-engine">Fallback engine</label>
+      <select id="tts-fallback-engine">
+        <option value="none" {{ 'selected' if settings.tts.fallback_engine in ['', 'none'] else '' }}>None — just report the failure</option>
+        {% for eid, engine in catalog.tts.items() %}
+          <option value="{{ eid }}" {{ 'selected' if settings.tts.fallback_engine == eid else '' }}>{{ engine.label }}</option>
+        {% endfor %}
+      </select>
+      <p class="field__hint">Used only if the primary engine fails; the result always says which engine spoke.</p>
+    </div>
+    <div class="field">
+      <label for="tts-speed">Speech speed</label>
+      <div class="range-row">
+        <input type="range" id="tts-speed" min="0.7" max="1.3" step="0.05" value="{{ settings.tts.speed }}">
+        <span class="range-value" id="tts-speed-value">{{ '%.2f'|format(settings.tts.speed) }}×</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid--2" style="margin-top:16px">
+    {% for secret_name, label, help_text in [
+        ('openai_tts', 'OpenAI text-to-speech key', 'Only needed if the OpenAI voice engine is selected.'),
+        ('elevenlabs', 'ElevenLabs key', 'Only needed if the ElevenLabs engine is selected.') ] %}
+      <div class="field">
+        <label for="key-{{ secret_name }}">{{ label }}</label>
+        <div class="key-row">
+          <input type="password" id="key-{{ secret_name }}" data-secret-input="{{ secret_name }}"
+                 autocomplete="off" spellcheck="false" placeholder="Paste a key">
+          <button type="button" class="btn btn--ghost btn--sm" data-save-secret="{{ secret_name }}">Save</button>
+          <button type="button" class="btn btn--danger btn--sm" data-remove-secret="{{ secret_name }}">Remove</button>
+        </div>
+        <p class="status-line" data-secret="{{ secret_name }}"></p>
+        <p class="field__hint">{{ help_text }}</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="btn-row" style="margin-top:16px">
+    <button type="button" class="btn btn--ghost" id="tts-test">Test voice engine</button>
+    <span class="small muted" id="tts-test-result"></span>
+  </div>
+</section>
+
+<section class="sheet">
+  <div class="sheet__head">
+    <div>
+      <h2>Script mode</h2>
+      <p>Template mode is always available and never calls an API.</p>
+    </div>
+  </div>
+  <label class="check">
+    <input type="checkbox" id="force-template" {{ 'checked' if settings.llm.force_template else '' }}>
+    <span><strong>Always use the built-in template script.</strong> No API request is made, nothing is billed, and output is deterministic.</span>
+  </label>
+  <div class="btn-row" style="margin-top:18px">
+    <button type="button" class="btn btn--primary" id="save-settings">Save settings</button>
+    <span class="small muted" id="save-settings-result"></span>
+  </div>
+  <p class="note">
+    Keys are stored on the server and shown only as a mask. They are never included in a page, an
+    API response, or a log line.
+  </p>
+</section>

@@ -1,0 +1,2 @@
+INFO:waitress:Serving on http://127.0.0.1:8010
+2026-10-29 01:24:00 INFO    apvg.ffmpeg: Using bundled FFmpeg from imageio-ffmpeg.

@@ -1,0 +1,39 @@
+# --- secrets & local configuration (never commit) ---
+.env
+.env.local
+config/settings.json
+config/secrets.json
+config/*.local.json
+*.key
+*.pem
+
+# --- Python ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# --- runtime uploads (user photos, audio, temp renders) ---
+uploads/*
+!uploads/.gitkeep
+music_library/*
+!music_library/.gitkeep
+!music_library/README.md
+
+# --- generated videos: keep the curated sample deliverables, ignore the rest ---
+generated_videos/*
+!generated_videos/.gitkeep
+!generated_videos/samples/
+generated_videos/samples/*
+!generated_videos/samples/*.mp4
+!generated_videos/samples/*.json
+
+# --- scratch / OS noise ---
+.scratch/
+Thumbs.db
+desktop.ini
+.DS_Store

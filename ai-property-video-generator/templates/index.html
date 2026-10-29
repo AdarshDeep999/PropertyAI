@@ -1,0 +1,355 @@
+{% extends "base.html" %}
+{% block title %}Create a property video · Property Video Studio{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <p class="eyebrow">Guided workflow</p>
+    <h1>Turn property photos into a marketing video</h1>
+    <p class="lede">
+      Fill in only what you know, add 4–8 photos, and the app writes the script, narrates it, and
+      exports a 20–40 second MP4. Nothing is invented: the video only says what you type here.
+    </p>
+  </div>
+  <span class="pill pill--neutral">1080p · 16:9 · MP4</span>
+</div>
+
+<form id="property-form" novalidate autocomplete="off">
+  <nav class="stepper" role="tablist" aria-label="Steps">
+    <button type="button" class="step" role="tab" data-tab="details" aria-selected="true"><span class="step__num">1</span> Property details</button>
+    <button type="button" class="step" role="tab" data-tab="images" aria-selected="false"><span class="step__num">2</span> Photos</button>
+    <button type="button" class="step" role="tab" data-tab="script" aria-selected="false"><span class="step__num">3</span> Script &amp; voice</button>
+    <button type="button" class="step" role="tab" data-tab="music" aria-selected="false"><span class="step__num">4</span> Music</button>
+    <button type="button" class="step" role="tab" data-tab="progress" aria-selected="false"><span class="step__num">5</span> Progress</button>
+    <button type="button" class="step" role="tab" data-tab="result" aria-selected="false"><span class="step__num">6</span> Preview &amp; download</button>
+  </nav>
+
+  <!-- 1 · details -->
+  <section class="panel is-active" id="panel-details" role="tabpanel" aria-label="Property details">
+    <div class="sheet">
+      <div class="sheet__head">
+        <div><h2>Property details</h2></div>
+        <p>Required fields are marked. Everything else is optional and simply left out of the video if blank.</p>
+      </div>
+      <div class="grid grid--2">
+        <div class="field">
+          <label for="field-name">Property name <span class="req">*</span></label>
+          <input type="text" id="field-name" name="name" maxlength="80" placeholder="Marina Crest Residence">
+          <span class="field__error" data-error-for="name"></span>
+        </div>
+        <div class="field">
+          <label for="field-location">Location <span class="req">*</span></label>
+          <input type="text" id="field-location" name="location" maxlength="100" placeholder="12 Harbour View Lane, Portside">
+          <span class="field__error" data-error-for="location"></span>
+        </div>
+        <div class="field">
+          <label for="field-price">Price</label>
+          <input type="text" id="field-price" name="price" maxlength="40" placeholder="$685,000">
+          <p class="field__hint">Shown as-is. It is never mentioned if you leave this blank.</p>
+          <span class="field__error" data-error-for="price"></span>
+        </div>
+        <div class="field">
+          <label for="field-type">Property type</label>
+          <select id="field-type" name="property_type">
+            <option value="">Not specified</option>
+            {% for item in ["Apartment", "House", "Villa", "Townhouse", "Bungalow", "Studio", "Cottage", "Duplex", "Penthouse", "Land", "Other"] %}
+              <option value="{{ item }}">{{ item }}</option>
+            {% endfor %}
+          </select>
+          <span class="field__error" data-error-for="property_type"></span>
+        </div>
+        <div class="field">
+          <label for="field-bedrooms">Bedrooms</label>
+          <input type="number" id="field-bedrooms" name="bedrooms" min="0" max="50" step="1" placeholder="3">
+          <span class="field__error" data-error-for="bedrooms"></span>
+        </div>
+        <div class="field">
+          <label for="field-contact">Contact / call to action</label>
+          <input type="text" id="field-contact" name="contact" maxlength="160" placeholder="Call 555 0142 · hello@coastalandco.example">
+          <p class="field__hint">Verbatim on the final screen. Leave blank for a generic enquiry line.</p>
+          <span class="field__error" data-error-for="contact"></span>
+        </div>
+      </div>
+      <div class="grid" style="margin-top:16px">
+        <div class="field">
+          <label for="field-features">Key features and amenities</label>
+          <textarea id="field-features" name="features" maxlength="600" rows="4"
+                    placeholder="Private balcony with sea views&#10;Underfloor heating&#10;Secure parking for two cars"></textarea>
+          <p class="field__hint">One per line. These become your photo captions and narration.</p>
+          <span class="field__error" data-error-for="features"></span>
+        </div>
+        <div class="field">
+          <label for="field-description">Additional description</label>
+          <textarea id="field-description" name="description" maxlength="800" rows="3"
+                    placeholder="Optional context you are happy to repeat in the video."></textarea>
+          <span class="field__error" data-error-for="description"></span>
+        </div>
+      </div>
+      <div class="btn-row" style="margin-top:16px">
+        <button type="button" class="btn btn--ghost btn--sm" id="load-sample">Fill with synthetic sample data</button>
+        <button type="button" class="btn btn--ghost btn--sm" id="demo-generate">Generate demo video from sample data</button>
+        <span class="small muted">Fictional property, no personal data. The demo uses the six bundled illustrations.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · images -->
+  <section class="panel" id="panel-images" role="tabpanel" aria-label="Photos">
+    <div class="sheet">
+      <div class="sheet__head">
+        <div><h2>Property photos</h2></div>
+        <p>JPG, PNG or WebP · 4 to 8 images · 15 MB each. Order them the way the video should tell the story.</p>
+      </div>
+
+      <label class="dropzone" id="dropzone" for="image-input">
+        <input type="file" id="image-input" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" multiple>
+        <div class="dropzone__title">Drop photos here, or click to choose</div>
+        <div class="dropzone__hint">The first photo becomes the opening shot and the last one sets the closing backdrop.</div>
+      </label>
+
+      <div class="btn-row" style="margin-top:14px">
+        <div class="counter" style="flex:1 1 260px">
+          <span id="image-count">0 photos</span>
+          <span class="counter__bar"><span class="counter__fill" id="image-count-fill"></span></span>
+          <span class="small muted">min 4 · max 8</span>
+        </div>
+        <button type="button" class="btn btn--ghost btn--sm" id="clear-images">Clear all</button>
+      </div>
+
+      <div class="alert alert--error" id="image-alert" hidden></div>
+      <div class="thumbs" id="thumbs"></div>
+      <div class="empty-state" id="thumbs-empty" style="margin-top:18px">
+        No photos yet. Add at least four to continue.
+      </div>
+      <div class="alert alert--info" style="margin-top:18px">
+        <div>
+          <strong>Tip:</strong> use landscape photos. The app crops to 16:9 automatically, strips
+          location metadata, and downsizes anything oversized before rendering.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · script & voice -->
+  <section class="panel" id="panel-script" role="tabpanel" aria-label="Script and voice-over">
+    <div class="sheet">
+      <div class="sheet__head">
+        <div><h2>Script and captions</h2></div>
+        <p>Preview the script before rendering. A preview is cached, so generating the video does not call the AI twice.</p>
+      </div>
+
+      <div class="grid grid--2">
+        <div class="field">
+          <label for="tone">Tone</label>
+          <select id="tone" name="tone">
+            <option value="warm">Warm and welcoming</option>
+            <option value="premium">Premium and restrained</option>
+            <option value="concise">Concise and factual</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Script source</label>
+          <div class="btn-row">
+            <button type="button" class="btn btn--primary btn--sm" id="generate-script">Generate script</button>
+            <button type="button" class="btn btn--ghost btn--sm" id="use-template">Use template script</button>
+          </div>
+          <p class="field__hint" id="script-will-use">Checking provider configuration…</p>
+        </div>
+      </div>
+
+      <div id="script-status"></div>
+      <div class="script-card" id="script-card" hidden>
+        <div class="script-card__head">
+          <span class="badge" id="script-badge">Template</span>
+          <strong id="script-headline" style="flex:1 1 200px"></strong>
+          <span class="small muted" id="script-estimate"></span>
+        </div>
+        <div class="script-card__body" id="script-scenes"></div>
+      </div>
+      <input type="hidden" name="script_json" id="script-json">
+      <input type="hidden" name="force_template" id="force-template-field" value="0">
+    </div>
+
+    <div class="sheet">
+      <div class="sheet__head">
+        <div><h2>Voice-over</h2></div>
+        <p>Optional. Narration is generated per scene and timed to the picture so no sentence is cut off.</p>
+      </div>
+
+      <label class="check">
+        <input type="checkbox" id="enable-narration" name="enable_narration" value="1" checked>
+        <span><strong>Add narration</strong> — if the engine fails, the app stops and tells you rather than silently dropping the voice.</span>
+      </label>
+
+      <div class="grid grid--2" id="narration-options" style="margin-top:16px">
+        <div class="field">
+          <label for="gen-tts-engine">Engine</label>
+          <select id="gen-tts-engine"></select>
+          <p class="field__hint" id="gen-tts-note">Changing this saves to Settings immediately.</p>
+        </div>
+        <div class="field">
+          <label for="gen-tts-voice">Voice</label>
+          <select id="gen-tts-voice"></select>
+        </div>
+      </div>
+
+      <div class="btn-row" style="margin-top:14px">
+        <button type="button" class="btn btn--ghost btn--sm" id="preview-narration">Preview narration</button>
+        <span class="small muted" id="narration-preview-status">Uses the first few lines of the script.</span>
+      </div>
+      <audio id="narration-audio" controls hidden style="width:100%;margin-top:12px"></audio>
+      <div class="alert alert--warn" id="narration-alert" hidden></div>
+    </div>
+  </section>
+
+  <!-- 4 · music -->
+  <section class="panel" id="panel-music" role="tabpanel" aria-label="Background music">
+    <div class="sheet">
+      <div class="sheet__head">
+        <div><h2>Background music</h2></div>
+        <p>Music is always a file you supply. The app never generates or downloads music on your behalf.</p>
+      </div>
+
+      <div class="choice-grid" id="music-modes">
+        <label class="choice is-selected" data-mode="none">
+          <input type="radio" name="music_mode" value="none" checked>
+          <span class="choice__title">No music</span>
+          <span class="choice__desc">Narration only, or a silent video. Always renders.</span>
+        </label>
+        <label class="choice" data-mode="library">
+          <input type="radio" name="music_mode" value="library">
+          <span class="choice__title">Choose from library</span>
+          <span class="choice__desc">Reuse a track you already added here.</span>
+        </label>
+        <label class="choice" data-mode="upload">
+          <input type="radio" name="music_mode" value="upload">
+          <span class="choice__title">Upload for this video</span>
+          <span class="choice__desc">Use a track once, optionally keep it in the library.</span>
+        </label>
+      </div>
+
+      <div id="music-library-wrap" hidden style="margin-top:18px">
+        <div class="sheet__head" style="margin-bottom:8px">
+          <div><h3>Music library</h3></div>
+          <span class="small muted" id="music-usage"></span>
+        </div>
+        <div class="track-list" id="music-library"></div>
+        <div class="empty-state" id="music-empty" hidden>
+          The library is empty. Switch to “Upload for this video” to add your first track.
+        </div>
+      </div>
+
+      <div id="music-upload-wrap" hidden style="margin-top:18px">
+        <div class="field">
+          <label for="music-file">Audio file</label>
+          <input type="file" id="music-file" name="music_file" accept=".mp3,.wav,.m4a,.aac,.ogg,.flac,audio/*">
+          <p class="field__hint">MP3 or WAV recommended · up to 25 MB. Corrupt files are rejected before rendering.</p>
+          <span class="field__error" data-error-for="music"></span>
+        </div>
+        <label class="check" style="margin-top:10px">
+          <input type="checkbox" id="save-to-library" name="save_to_library" value="1">
+          <span>Also keep this track in my music library</span>
+        </label>
+      </div>
+
+      <div class="field" style="margin-top:22px">
+        <label for="music-volume">Music volume <span class="req" id="music-volume-label">30%</span></label>
+        <input type="range" id="music-volume" name="music_volume" min="0" max="100" step="1" value="30">
+        <p class="field__hint">Music automatically ducks under the narration, then returns in the gaps.</p>
+      </div>
+
+      <div class="alert alert--warn" style="margin-top:18px">
+        <div>
+          <strong>Rights:</strong> only use music you own or are licensed to use. The app provides
+          no music and does not generate any. Track metadata and licence responsibility are yours.
+        </div>
+      </div>
+      <input type="hidden" name="music_id" id="music-id">
+    </div>
+  </section>
+
+  <!-- 5 · progress -->
+  <section class="panel" id="panel-progress" role="tabpanel" aria-label="Generation progress">
+    <div class="sheet">
+      <div class="sheet__head">
+        <div><h2>Generating your video</h2></div>
+        <p>Each step is marked complete only when the work behind it has actually finished.</p>
+      </div>
+      <div class="progress-head">
+        <span class="badge" id="job-status-badge">Not started</span>
+        <div class="progress-bar"><div class="progress-bar__fill" id="progress-fill"></div></div>
+        <span class="small muted" id="progress-percent">0%</span>
+        <button type="button" class="btn btn--danger btn--sm" id="cancel-job" hidden>Cancel</button>
+      </div>
+      <ol class="stages" id="stages"></ol>
+      <div class="alert alert--error" id="job-error" hidden></div>
+      <div class="alert alert--warn" id="job-warnings" hidden></div>
+      <div class="alert alert--ok" id="job-done" hidden>
+        <div><strong>Finished.</strong> Your MP4 is ready to watch and download.</div>
+      </div>
+      <div class="btn-row" style="margin-top:16px">
+        <button type="button" class="btn btn--primary" id="go-to-result" hidden>View the video</button>
+        <button type="button" class="btn btn--ghost" id="retry-generate" hidden>Try again</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · result -->
+  <section class="panel" id="panel-result" role="tabpanel" aria-label="Preview and download">
+    <div class="sheet" id="result-empty">
+      <div class="empty-state">
+        No video yet. Finish the steps and press <strong>Generate video</strong> — the finished MP4
+        appears here with a player and a download link.
+      </div>
+    </div>
+
+    <div class="sheet" id="result-ready" hidden>
+      <div class="sheet__head">
+        <div><h2>Your property video</h2></div>
+        <span class="pill pill--ok"><span class="dot"></span> Ready</span>
+      </div>
+      <div class="result-grid">
+        <div>
+          <div class="video-frame">
+            <video id="result-video" controls playsinline preload="metadata"></video>
+          </div>
+          <div class="btn-row" style="margin-top:14px">
+            <a class="btn btn--accent" id="download-link" href="#" download>Download MP4</a>
+            <button type="button" class="btn btn--ghost" id="start-over">Generate another</button>
+          </div>
+          <p class="small muted" id="result-file"></p>
+        </div>
+        <div>
+          <dl class="meta-list" id="result-meta"></dl>
+          <div class="alert alert--info" style="margin-top:14px" id="result-script-note"></div>
+          <div class="alert alert--warn" id="result-warnings" hidden></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="sheet" style="margin-top:18px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between">
+    <div class="small muted" id="readiness">Add at least 4 photos to enable generation.</div>
+    <div class="btn-row">
+      <button type="button" class="btn btn--ghost" id="btn-prev">Back</button>
+      <button type="button" class="btn btn--ghost" id="btn-next">Next</button>
+      <button type="button" class="btn btn--accent" id="generate-btn" disabled>Generate video</button>
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script id="bootstrap" type="application/json">
+  {{ {
+    "csrf": csrf_token,
+    "settings": settings,
+    "catalog": catalog,
+    "secrets": secrets,
+    "limits": limits,
+    "has_llm_key": has_llm_key
+  } | tojson }}
+</script>
+<script src="{{ url_for('static', filename='js/settings.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+{% endblock %}

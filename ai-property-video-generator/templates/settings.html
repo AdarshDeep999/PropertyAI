@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Settings · Property Video Studio{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <p class="eyebrow">Setup</p>
+    <h1>AI providers and voices</h1>
+    <p class="lede">
+      Configure only the services you want to use. Template scripts and the built-in voices
+      work without any key or any cost.
+    </p>
+  </div>
+  <a class="btn btn--ghost" href="/">Back to the generator</a>
+</div>
+
+<div class="settings-grid">
+  <div>
+    {% include "_provider_settings.html" %}
+  </div>
+
+  <aside>
+    <section class="sheet">
+      <div class="sheet__head">
+        <div><h2>What needs a key</h2></div>
+      </div>
+      <ul class="small" style="margin:0;padding-left:18px;display:grid;gap:10px;color:var(--ink-3)">
+        <li><strong>Scripts.</strong> The template writer is built in and free. A Gemini or
+            OpenAI-compatible key unlocks AI-written scripts.</li>
+        <li><strong>Voice.</strong> Edge neural voices are free (internet required); the built-in
+            Windows voice works offline. Cloud voices are optional.</li>
+        <li><strong>Music.</strong> Always your own file. Nothing is generated or sourced for you.</li>
+      </ul>
+    </section>
+
+    <section class="sheet">
+      <div class="sheet__head">
+        <div><h2>Privacy</h2></div>
+      </div>
+      <p class="small muted" style="margin:0">
+        Keys are stored on the server, displayed only as a mask, and never sent to the browser.
+        Property photos and rendered videos stay on this server.
+      </p>
+    </section>
+  </aside>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script id="bootstrap" type="application/json">
+  {{ {
+    "csrf": csrf_token,
+    "settings": settings,
+    "catalog": catalog,
+    "secrets": secrets,
+    "limits": limits,
+    "has_llm_key": has_llm_key
+  } | tojson }}
+</script>
+<script src="{{ url_for('static', filename='js/settings.js') }}" defer></script>
+{% endblock %}

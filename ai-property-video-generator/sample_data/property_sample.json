@@ -1,0 +1,17 @@
+{
+  "_note": "Synthetic demo data. 'Marina Crest Residence', the address, the phone number and the email domain are entirely fictional. The phone number uses the 555-01xx range reserved for fiction. No real customer information is present.",
+  "name": "Marina Crest Residence",
+  "location": "12 Harbour View Lane, Portside",
+  "price": "$685,000",
+  "property_type": "Apartment",
+  "bedrooms": 3,
+  "key_features": [
+    "Private balcony with sea views",
+    "Open-plan living and dining area",
+    "Fitted kitchen with stone worktops",
+    "Secure underground parking for two cars",
+    "Residents' gym and concierge desk"
+  ],
+  "contact": "Coastal & Co. Realty · +1 555 0142 · hello@coastalandco.example",
+  "description": "A third-floor apartment in a quiet harbour-side building, a short walk from the marina, cafes and the ferry terminal. The building has a lift, a secure entrance lobby and a shared roof terrace for residents."
+}

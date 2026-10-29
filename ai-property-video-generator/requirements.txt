@@ -1,0 +1,22 @@
+# AI Property Video Generator — pinned dependency set
+# Verified on: Windows 11, Python 3.14.0, pip 26.x
+#
+# Flask            - web framework (routes, templating, file responses)
+# Pillow           - scene composition, image validation/normalisation, sample images
+# imageio-ffmpeg   - ships a static FFmpeg 7.1 binary (libx264 + native AAC) so the
+#                    app works on Windows without a manual FFmpeg install
+# requests         - server-side HTTP calls to Gemini / OpenAI-compatible / TTS APIs
+# mutagen          - music metadata (title/artist/album) for the music library
+# edge-tts         - free, keyless neural text-to-speech (Microsoft Edge voices)
+# waitress         - production WSGI server (Windows and Linux; used by Docker)
+# python-dotenv    - optional .env loading for API keys and paths
+# pytest           - automated test suite
+Flask==3.1.3
+Pillow==12.1.0
+requests==2.32.5
+python-dotenv==1.2.2
+imageio-ffmpeg==0.7.0
+mutagen==1.48.1
+edge-tts==7.3.1
+waitress==3.0.2
+pytest==9.2.0

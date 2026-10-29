@@ -1,0 +1,614 @@
+2026-10-29 00:43:44 INFO    apvg.ffmpeg: Using bundled FFmpeg from imageio-ffmpeg.
+2026-10-29 00:46:49 WARNING apvg: POST /api/settings/secret → settings_error (Unknown credential.)
+2026-10-29 00:46:52 INFO    apvg: Connection test (llm): ok=False code=invalid_credentials
+2026-10-29 00:46:55 WARNING apvg: POST /api/settings/secret → settings_error (Unknown credential.)
+2026-10-29 00:47:00 WARNING apvg: POST /api/settings/secret → settings_error (Unknown credential.)
+2026-10-29 00:47:28 WARNING apvg: POST /api/settings/secret → settings_error (Unknown credential.)
+2026-10-29 00:49:17 INFO    apvg.ffmpeg: Using bundled FFmpeg from imageio-ffmpeg.
+2026-10-29 00:49:25 WARNING apvg: POST /api/settings/secret → settings_error (Unknown credential.)
+2026-10-29 00:51:15 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:52:00 INFO    apvg.settings: Credential removed for gemini.
+2026-10-29 00:52:17 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:52:30 INFO    apvg.settings: Credential removed for gemini.
+2026-10-29 00:52:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:52:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:52:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:52:51 INFO    apvg.settings: Credential removed for gemini.
+2026-10-29 00:52:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:52:51 WARNING apvg.settings: Could not read secrets.json (Expecting property name enclosed in double quotes: line 1 column 2 (char 1)); using defaults.
+2026-10-29 00:52:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:52:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:52:52 INFO    apvg.ffmpeg: Using bundled FFmpeg from imageio-ffmpeg.
+2026-10-29 00:52:52 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:52:52 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:52:52 WARNING apvg: POST /api/settings → forbidden (Your session token expired. Reload the page and try again.)
+2026-10-29 00:52:52 WARNING apvg: POST /api/settings → settings_error (Speech speed must be between 0.5 and 2.0.)
+2026-10-29 00:52:52 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:52:52 INFO    apvg.settings: Credential removed for gemini.
+2026-10-29 00:52:52 WARNING apvg: GET /api/settings → forbidden (This app only accepts requests from this computer.)
+2026-10-29 00:52:52 WARNING apvg: POST /api/script → validation_error (Location is required.)
+2026-10-29 00:52:52 WARNING apvg: POST /api/script → validation_error (Select 4–8 photos first.)
+2026-10-29 00:52:52 WARNING apvg: POST /api/generate → invalid_image (Please add at least 4 property photos.)
+2026-10-29 00:52:52 WARNING apvg: POST /api/generate → invalid_image ('photo0.gif' is not a supported image type.)
+2026-10-29 00:52:52 WARNING apvg: POST /api/generate → validation_error (Property name is required.)
+2026-10-29 00:52:52 INFO    apvg: Job 5af5e9b150ae4f73b312f0a062f85638 finished in 0.0s (template, 68.4 KB)
+2026-10-29 00:52:52 INFO    apvg: Job 53dc8f448bff492faae46be9dfacfd12 finished in 0.0s (template, 68.4 KB)
+2026-10-29 00:52:52 WARNING apvg: POST /api/generate → validation_error (Choose a track from the library, or select 'No music'.)
+2026-10-29 00:52:52 WARNING apvg.script: Using template script (No Google Gemini API key is configured, so the built-in template script was used. Add a key in Settings to use AI scripts.).
+2026-10-29 00:52:52 INFO    apvg: Job 99f299f4de6444f9b6632ec61516c672 cancelled by user.
+2026-10-29 00:52:52 INFO    apvg: Job 39c1a713a5664585b366fc727ef19ecf finished in 0.2s (template, 68.4 KB)
+2026-10-29 00:52:53 INFO    apvg.music: Added music track f2b47cdb022a4ba097ca2ec3bc7d27f3 (piano.wav).
+2026-10-29 00:52:53 INFO    apvg.music: Removed music track f2b47cdb022a4ba097ca2ec3bc7d27f3.
+2026-10-29 00:52:53 WARNING apvg: POST /api/music → invalid_music (That audio file could not be read.)
+2026-10-29 00:53:42 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:53:42 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:53:42 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:53:42 INFO    apvg.settings: Credential removed for gemini.
+2026-10-29 00:53:42 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:53:42 WARNING apvg.settings: Could not read secrets.json (Expecting property name enclosed in double quotes: line 1 column 2 (char 1)); using defaults.
+2026-10-29 00:53:42 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:53:42 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:53:43 INFO    apvg.ffmpeg: Using bundled FFmpeg from imageio-ffmpeg.
+2026-10-29 00:53:43 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:53:43 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:53:43 WARNING apvg: POST /api/settings → forbidden (Your session token expired. Reload the page and try again.)
+2026-10-29 00:53:43 WARNING apvg: POST /api/settings → settings_error (Speech speed must be between 0.5 and 2.0.)
+2026-10-29 00:53:43 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:53:43 INFO    apvg.settings: Credential removed for gemini.
+2026-10-29 00:53:43 WARNING apvg: GET /api/settings → forbidden (This app only accepts requests from this computer.)
+2026-10-29 00:53:43 WARNING apvg: POST /api/script → validation_error (Location is required.)
+2026-10-29 00:53:43 WARNING apvg: POST /api/script → validation_error (Select 4–8 photos first.)
+2026-10-29 00:53:43 WARNING apvg: POST /api/generate → invalid_image (Please add at least 4 property photos.)
+2026-10-29 00:53:43 WARNING apvg: POST /api/generate → invalid_image ('photo0.gif' is not a supported image type.)
+2026-10-29 00:53:43 WARNING apvg: POST /api/generate → validation_error (Property name is required.)
+2026-10-29 00:53:43 INFO    apvg: Job eda441392dd348a795c0b50d723a0df5 finished in 0.0s (template, 68.4 KB)
+2026-10-29 00:53:43 INFO    apvg: Job 544b4d6b78604949ab976448603901da finished in 0.0s (template, 68.4 KB)
+2026-10-29 00:53:43 WARNING apvg: POST /api/generate → validation_error (Choose a track from the library, or select 'No music'.)
+2026-10-29 00:53:43 WARNING apvg.script: Using template script (No Google Gemini API key is configured, so the built-in template script was used. Add a key in Settings to use AI scripts.).
+2026-10-29 00:53:43 INFO    apvg: Job aa5e90d66bdc4c3899230f47c957b154 cancelled by user.
+2026-10-29 00:53:43 INFO    apvg: Job b7e6d66420514162a3bdfb5a9bf3ddfd finished in 0.2s (template, 68.4 KB)
+2026-10-29 00:53:43 INFO    apvg.music: Added music track 1f4f5489286d45ca95f815023f49db4e (piano.wav).
+2026-10-29 00:53:43 INFO    apvg.music: Removed music track 1f4f5489286d45ca95f815023f49db4e.
+2026-10-29 00:53:44 WARNING apvg: POST /api/music → invalid_music (That audio file could not be read.)
+2026-10-29 00:54:15 INFO    apvg.ffmpeg: Using bundled FFmpeg from imageio-ffmpeg.
+2026-10-29 00:54:18 INFO    apvg.music: Added music track 649b814d89e64c7e86eb483a143ace9d (piano.wav).
+2026-10-29 00:54:18 INFO    apvg.music: Removed music track 649b814d89e64c7e86eb483a143ace9d.
+2026-10-29 00:54:18 INFO    apvg.music: Added music track 50176f79fdba4825b3b48c7716a9d28c (tagged.wav).
+2026-10-29 00:54:18 INFO    apvg.music: Added music track 0e21f5fcf80b4c3fbf208d08e12ea6eb (a.wav).
+2026-10-29 00:54:19 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:54:19 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:54:19 WARNING apvg: POST /api/settings → forbidden (Your session token expired. Reload the page and try again.)
+2026-10-29 00:54:19 WARNING apvg: POST /api/settings → settings_error (Speech speed must be between 0.5 and 2.0.)
+2026-10-29 00:54:19 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:54:19 INFO    apvg.settings: Credential removed for gemini.
+2026-10-29 00:54:19 WARNING apvg: GET /api/settings → forbidden (This app only accepts requests from this computer.)
+2026-10-29 00:54:19 WARNING apvg: POST /api/script → validation_error (Location is required.)
+2026-10-29 00:54:19 WARNING apvg: POST /api/script → validation_error (Select 4–8 photos first.)
+2026-10-29 00:54:19 WARNING apvg: POST /api/generate → invalid_image (Please add at least 4 property photos.)
+2026-10-29 00:54:19 WARNING apvg: POST /api/generate → invalid_image ('photo0.gif' is not a supported image type.)
+2026-10-29 00:54:19 WARNING apvg: POST /api/generate → validation_error (Property name is required.)
+2026-10-29 00:54:19 INFO    apvg: Job ae46b83668284330a2d9bc9f9d349979 finished in 0.0s (template, 68.4 KB)
+2026-10-29 00:54:19 INFO    apvg: Job 06f9784e23814a93847b76d035dc7f39 finished in 0.0s (template, 68.4 KB)
+2026-10-29 00:54:19 WARNING apvg: POST /api/generate → validation_error (Choose a track from the library, or select 'No music'.)
+2026-10-29 00:54:19 WARNING apvg.script: Using template script (No Google Gemini API key is configured, so the built-in template script was used. Add a key in Settings to use AI scripts.).
+2026-10-29 00:54:19 INFO    apvg: Job 541246afa0e44572b4c098ac16aab7e7 cancelled by user.
+2026-10-29 00:54:19 INFO    apvg: Job 2e1e151cf1e64222bf5b8f6dd50e3118 finished in 0.2s (template, 68.4 KB)
+2026-10-29 00:54:20 INFO    apvg.music: Added music track 314974ab9e7642c1a8070f23ceee5d06 (piano.wav).
+2026-10-29 00:54:20 INFO    apvg.music: Removed music track 314974ab9e7642c1a8070f23ceee5d06.
+2026-10-29 00:54:20 WARNING apvg: POST /api/music → invalid_music (That audio file could not be read.)
+2026-10-29 00:54:20 WARNING apvg.script: Using template script (No Google Gemini API key is configured, so the built-in template script was used. Add a key in Settings to use AI scripts.).
+2026-10-29 00:54:20 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:54:20 WARNING apvg.script: Using template script (Template mode is enabled in Settings, so the built-in script was used.).
+2026-10-29 00:54:20 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:54:20 INFO    apvg.script: AI script generated with gemini/gemini-2.5-flash in 1 attempt(s).
+2026-10-29 00:54:20 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:54:20 INFO    apvg.script: AI script generated with gemini/gemini-2.5-flash in 1 attempt(s).
+2026-10-29 00:54:20 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:54:20 WARNING apvg.script: Script attempt 1/2 failed: could not parse JSON from 34 chars of model output
+2026-10-29 00:54:20 WARNING apvg.script: Script attempt 2/2 failed: could not parse JSON from 34 chars of model output
+2026-10-29 00:54:20 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 00:54:20 WARNING apvg.script: Technical detail: could not parse JSON from 34 chars of model output
+2026-10-29 00:54:20 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:54:20 WARNING apvg.script: Script attempt 1/2 failed: The Gemini API key was rejected.
+2026-10-29 00:54:20 WARNING apvg.script: Using template script (Google Gemini rejected the API key, so the built-in template script was used. Update the key in Settings to use AI scripts.).
+2026-10-29 00:54:20 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:54:20 WARNING apvg.script: Script attempt 1/2 failed: Gemini is temporarily rate limiting requests.
+2026-10-29 00:54:20 WARNING apvg.script: Script attempt 2/2 failed: Gemini is temporarily rate limiting requests.
+2026-10-29 00:54:20 WARNING apvg.script: Using template script (Google Gemini is rate limiting requests right now, so the built-in template script was used. Try again in a minute for an AI script.).
+2026-10-29 00:54:20 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:54:20 WARNING apvg.script: Script attempt 1/2 failed: Could not reach Gemini.
+2026-10-29 00:54:20 WARNING apvg.script: Script attempt 2/2 failed: Could not reach Gemini.
+2026-10-29 00:54:20 WARNING apvg.script: Using template script (Could not reach Google Gemini, so the built-in template script was used.).
+2026-10-29 00:54:20 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:54:20 WARNING apvg.script: Script attempt 1/2 failed: fact guard rejected copy: unsupported number '1,999,000' in: "Yours for only $1,999,000."
+2026-10-29 00:54:20 WARNING apvg.script: Script attempt 2/2 failed: fact guard rejected copy: unsupported number '1,999,000' in: "Yours for only $1,999,000."
+2026-10-29 00:54:20 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 00:54:20 WARNING apvg.script: Technical detail: fact guard rejected copy: unsupported number '1,999,000' in: "Yours for only $1,999,000."
+2026-10-29 00:54:20 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:54:20 WARNING apvg.script: Script attempt 1/2 failed: expected 4 scenes, got 3
+2026-10-29 00:54:20 WARNING apvg.script: Script attempt 2/2 failed: expected 4 scenes, got 3
+2026-10-29 00:54:20 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 00:54:20 WARNING apvg.script: Technical detail: expected 4 scenes, got 3
+2026-10-29 00:54:20 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:54:20 WARNING apvg.script: Script attempt 1/2 failed: intro narration too long (40 > 13)
+2026-10-29 00:54:20 WARNING apvg.script: Script attempt 2/2 failed: intro narration too long (40 > 13)
+2026-10-29 00:54:20 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 00:54:20 WARNING apvg.script: Technical detail: intro narration too long (40 > 13)
+2026-10-29 00:54:20 WARNING apvg.script: Using template script (No OpenAI-compatible API key is configured, so the built-in template script was used. Add a key in Settings to use AI scripts.).
+2026-10-29 00:54:20 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:54:20 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:54:20 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:54:20 INFO    apvg.settings: Credential removed for gemini.
+2026-10-29 00:54:20 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:54:20 WARNING apvg.settings: Could not read secrets.json (Expecting property name enclosed in double quotes: line 1 column 2 (char 1)); using defaults.
+2026-10-29 00:54:20 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:54:20 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:54:20 WARNING apvg.tts: edge attempt 1 failed: Edge is unavailable
+2026-10-29 00:54:20 WARNING apvg.tts: edge attempt 2 failed: Edge is unavailable
+2026-10-29 00:54:20 WARNING apvg.tts: Primary voice engine 'edge' failed: Edge is unavailable
+2026-10-29 00:54:20 WARNING apvg.tts: edge attempt 1 failed: Edge is down
+2026-10-29 00:54:20 WARNING apvg.tts: Primary voice engine 'edge' failed: Edge is down
+2026-10-29 00:54:20 WARNING apvg.tts: edge attempt 1 failed: edge failed
+2026-10-29 00:54:20 WARNING apvg.tts: Primary voice engine 'edge' failed: edge failed
+2026-10-29 00:54:20 WARNING apvg.tts: windows_sapi attempt 1 failed: windows_sapi failed
+2026-10-29 00:54:20 WARNING apvg.tts: edge attempt 1 failed: temporary network issue
+2026-10-29 00:54:20 WARNING apvg.tts: edge attempt 1 failed: bad key
+2026-10-29 00:54:20 WARNING apvg.tts: Primary voice engine 'edge' failed: bad key
+2026-10-29 00:58:09 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 00:58:14 INFO    apvg: Connection test (llm): ok=True code=connected
+2026-10-29 01:02:05 WARNING apvg.script: Script attempt 1/2 failed: Gemini HTTP 404: {
+  "error": {
+    "code": 404,
+    "message": "This model models/gemini-2.5-flash is no longer available to new users. Please update your code to use models/gemini-3.8-flash for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).",
+    "status": "NOT_FOUND"
+  }
+}
+
+2026-10-29 01:02:05 WARNING apvg.script: Using template script (Google Gemini does not recognise that model, so the built-in template script was used.).
+2026-10-29 01:02:05 WARNING apvg.script: Technical detail: Gemini HTTP 404: {
+  "error": {
+    "code": 404,
+    "message": "This model models/gemini-2.5-flash is no longer available to new users. Please update your code to use models/gemini-3.8-flash for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).",
+    "status": "NOT_FOUND"
+  }
+}
+
+2026-10-29 01:04:29 INFO    apvg: Job 8ba9184227cd496f89d1e684e447f4d7 finished in 146.9s (template, 4.5 MB)
+2026-10-29 01:07:55 WARNING apvg.script: Script attempt 1/2 failed: Gemini HTTP 404: {
+  "error": {
+    "code": 404,
+    "message": "This model models/gemini-2.5-flash is no longer available to new users. Please update your code to use models/gemini-3.8-flash for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).",
+    "status": "NOT_FOUND"
+  }
+}
+
+2026-10-29 01:07:55 WARNING apvg.script: Using template script (Google Gemini does not recognise that model, so the built-in template script was used.).
+2026-10-29 01:07:55 WARNING apvg.script: Technical detail: Gemini HTTP 404: {
+  "error": {
+    "code": 404,
+    "message": "This model models/gemini-2.5-flash is no longer available to new users. Please update your code to use models/gemini-3.8-flash for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).",
+    "status": "NOT_FOUND"
+  }
+}
+
+2026-10-29 01:10:11 INFO    apvg: Job 99fbe41d4a3c4479bfa4d29c23f20304 finished in 137.2s (template, 4.7 MB)
+2026-10-29 01:15:10 INFO    apvg.ffmpeg: Using bundled FFmpeg from imageio-ffmpeg.
+2026-10-29 01:15:10 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:15:10 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:15:10 WARNING apvg: POST /api/settings → forbidden (Your session token expired. Reload the page and try again.)
+2026-10-29 01:15:10 WARNING apvg: POST /api/settings → settings_error (Speech speed must be between 0.5 and 2.0.)
+2026-10-29 01:15:10 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:15:10 INFO    apvg.settings: Credential removed for gemini.
+2026-10-29 01:15:10 WARNING apvg: GET /api/settings → forbidden (This app only accepts requests from this computer.)
+2026-10-29 01:15:10 WARNING apvg: POST /api/script → validation_error (Location is required.)
+2026-10-29 01:15:10 WARNING apvg: POST /api/script → validation_error (Select 4–8 photos first.)
+2026-10-29 01:15:10 WARNING apvg: POST /api/generate → invalid_image (Please add at least 4 property photos.)
+2026-10-29 01:15:10 WARNING apvg: POST /api/generate → invalid_image ('photo0.gif' is not a supported image type.)
+2026-10-29 01:15:10 WARNING apvg: POST /api/generate → validation_error (Property name is required.)
+2026-10-29 01:15:10 INFO    apvg: Job 2fa60fa52d8944428a00d0da273e8b0b finished in 0.1s (template, 68.4 KB)
+2026-10-29 01:15:10 INFO    apvg: Job 2c5ec9d6be244ccf8fcf90cf563dfc90 finished in 0.0s (template, 68.4 KB)
+2026-10-29 01:15:10 WARNING apvg: POST /api/generate → validation_error (Choose a track from the library, or select 'No music'.)
+2026-10-29 01:15:10 WARNING apvg.script: Using template script (No Google Gemini API key is configured, so the built-in template script was used. Add a key in Settings to use AI scripts.).
+2026-10-29 01:15:10 INFO    apvg: Job ebf20b04423749968a72d6fc5c8f15f0 cancelled by user.
+2026-10-29 01:15:10 INFO    apvg: Job 77e3fb6bc2d5489d863d8fdc6a2fb8c3 finished in 0.2s (template, 68.4 KB)
+2026-10-29 01:15:11 INFO    apvg.music: Added music track 8cc3b5699f9c4e6e8d3c6c5c58d45653 (piano.wav).
+2026-10-29 01:15:11 INFO    apvg.music: Removed music track 8cc3b5699f9c4e6e8d3c6c5c58d45653.
+2026-10-29 01:15:11 WARNING apvg: POST /api/music → invalid_music (That audio file could not be read.)
+2026-10-29 01:15:11 WARNING apvg: GET / → forbidden (This app only accepts requests from this computer.)
+2026-10-29 01:15:26 WARNING apvg: GET / → forbidden (This app only accepts requests from this computer.)
+2026-10-29 01:20:35 INFO    apvg.ffmpeg: Using bundled FFmpeg from imageio-ffmpeg.
+2026-10-29 01:20:35 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:20:35 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:20:35 WARNING apvg: POST /api/settings → forbidden (Your session token expired. Reload the page and try again.)
+2026-10-29 01:20:35 WARNING apvg: POST /api/settings → settings_error (Speech speed must be between 0.5 and 2.0.)
+2026-10-29 01:20:35 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:20:35 INFO    apvg.settings: Credential removed for gemini.
+2026-10-29 01:20:35 WARNING apvg: GET /api/settings → forbidden (This app only accepts requests from this computer.)
+2026-10-29 01:20:35 WARNING apvg: POST /api/script → validation_error (Location is required.)
+2026-10-29 01:20:35 WARNING apvg: POST /api/script → validation_error (Select 4–8 photos first.)
+2026-10-29 01:20:35 WARNING apvg: POST /api/generate → invalid_image (Please add at least 4 property photos.)
+2026-10-29 01:20:35 WARNING apvg: POST /api/generate → invalid_image ('photo0.gif' is not a supported image type.)
+2026-10-29 01:20:35 WARNING apvg: POST /api/generate → validation_error (Property name is required.)
+2026-10-29 01:20:35 INFO    apvg: Job 6d64a3ef33a94fa1a94073ed08bda27f finished in 0.0s (template, 68.4 KB)
+2026-10-29 01:20:35 INFO    apvg: Job ad6b341aad984f78835440672f73c641 finished in 0.0s (template, 68.4 KB)
+2026-10-29 01:20:35 WARNING apvg: POST /api/generate → validation_error (Choose a track from the library, or select 'No music'.)
+2026-10-29 01:20:35 WARNING apvg.script: Using template script (No Google Gemini API key is configured, so the built-in template script was used. Add a key in Settings to use AI scripts.).
+2026-10-29 01:20:35 INFO    apvg: Job 6f4335eb75494413857d481989bc216e cancelled by user.
+2026-10-29 01:20:36 INFO    apvg: Job 5164861c6c9b430cae1c7227b3cee243 finished in 0.2s (template, 68.4 KB)
+2026-10-29 01:20:36 INFO    apvg.music: Added music track 0df17ba111cf4e4b9b2b5d1754c4f857 (piano.wav).
+2026-10-29 01:20:36 INFO    apvg.music: Removed music track 0df17ba111cf4e4b9b2b5d1754c4f857.
+2026-10-29 01:20:36 WARNING apvg: POST /api/music → invalid_music (That audio file could not be read.)
+2026-10-29 01:20:36 WARNING apvg: GET /api/health → forbidden (This app only accepts requests from this computer.)
+2026-10-29 01:20:36 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:20:36 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:20:36 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:20:36 INFO    apvg.settings: Credential removed for gemini.
+2026-10-29 01:20:36 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:20:36 WARNING apvg.settings: Could not read secrets.json (Expecting property name enclosed in double quotes: line 1 column 2 (char 1)); using defaults.
+2026-10-29 01:20:36 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:20:36 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:00 INFO    apvg.ffmpeg: Using bundled FFmpeg from imageio-ffmpeg.
+2026-10-29 01:24:46 INFO    apvg.ffmpeg: Using bundled FFmpeg from imageio-ffmpeg.
+2026-10-29 01:24:49 INFO    apvg.music: Added music track e04f31979861490792df7d30fd9bfc70 (piano.wav).
+2026-10-29 01:24:49 INFO    apvg.music: Removed music track e04f31979861490792df7d30fd9bfc70.
+2026-10-29 01:24:49 INFO    apvg.music: Added music track 255cacc7928f4dd4bd385b985fe6a409 (tagged.wav).
+2026-10-29 01:24:50 INFO    apvg.music: Added music track e0cb6817c5bd4c6689ce190c9035aa9d (a.wav).
+2026-10-29 01:24:50 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:50 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:50 WARNING apvg: POST /api/settings → forbidden (Your session token expired. Reload the page and try again.)
+2026-10-29 01:24:50 WARNING apvg: POST /api/settings → settings_error (Speech speed must be between 0.5 and 2.0.)
+2026-10-29 01:24:50 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:50 INFO    apvg.settings: Credential removed for gemini.
+2026-10-29 01:24:50 WARNING apvg: GET /api/settings → forbidden (This app only accepts requests from this computer.)
+2026-10-29 01:24:50 WARNING apvg: POST /api/script → validation_error (Location is required.)
+2026-10-29 01:24:50 WARNING apvg: POST /api/script → validation_error (Select 4–8 photos first.)
+2026-10-29 01:24:50 WARNING apvg: POST /api/generate → invalid_image (Please add at least 4 property photos.)
+2026-10-29 01:24:50 WARNING apvg: POST /api/generate → invalid_image ('photo0.gif' is not a supported image type.)
+2026-10-29 01:24:50 WARNING apvg: POST /api/generate → validation_error (Property name is required.)
+2026-10-29 01:24:50 INFO    apvg: Job 09800d727cf1417ab73f5165dd6a5dea finished in 0.0s (template, 68.4 KB)
+2026-10-29 01:24:50 INFO    apvg: Job 66cb6a7bb2da48649e1ff0452de1ee63 finished in 0.0s (template, 68.4 KB)
+2026-10-29 01:24:50 WARNING apvg: POST /api/generate → validation_error (Choose a track from the library, or select 'No music'.)
+2026-10-29 01:24:50 WARNING apvg.script: Using template script (No Google Gemini API key is configured, so the built-in template script was used. Add a key in Settings to use AI scripts.).
+2026-10-29 01:24:50 INFO    apvg: Job a1d1c08a86cb4aeaaf2e78a3882d619f cancelled by user.
+2026-10-29 01:24:51 INFO    apvg: Job 9a748424e0904a438a9e7fe23038bfd5 finished in 0.2s (template, 68.4 KB)
+2026-10-29 01:24:51 INFO    apvg.music: Added music track 54b21a506ffc49fb891c9f1fff447fcd (piano.wav).
+2026-10-29 01:24:51 INFO    apvg.music: Removed music track 54b21a506ffc49fb891c9f1fff447fcd.
+2026-10-29 01:24:51 WARNING apvg: POST /api/music → invalid_music (That audio file could not be read.)
+2026-10-29 01:24:51 WARNING apvg: GET /api/health → forbidden (This app only accepts requests from this computer.)
+2026-10-29 01:24:51 WARNING apvg.script: Using template script (No Google Gemini API key is configured, so the built-in template script was used. Add a key in Settings to use AI scripts.).
+2026-10-29 01:24:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:51 WARNING apvg.script: Using template script (Template mode is enabled in Settings, so the built-in script was used.).
+2026-10-29 01:24:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:51 INFO    apvg.script: AI script generated with gemini/gemini-2.5-flash in 1 attempt(s).
+2026-10-29 01:24:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:51 INFO    apvg.script: AI script generated with gemini/gemini-2.5-flash in 1 attempt(s).
+2026-10-29 01:24:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:51 WARNING apvg.script: Script attempt 1/2 failed: could not parse JSON from 34 chars of model output
+2026-10-29 01:24:51 WARNING apvg.script: Script attempt 2/2 failed: could not parse JSON from 34 chars of model output
+2026-10-29 01:24:51 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 01:24:51 WARNING apvg.script: Technical detail: could not parse JSON from 34 chars of model output
+2026-10-29 01:24:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:51 WARNING apvg.script: Script attempt 1/2 failed: The Gemini API key was rejected.
+2026-10-29 01:24:51 WARNING apvg.script: Using template script (Google Gemini rejected the API key, so the built-in template script was used. Update the key in Settings to use AI scripts.).
+2026-10-29 01:24:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:51 WARNING apvg.script: Script attempt 1/2 failed: Gemini is temporarily rate limiting requests.
+2026-10-29 01:24:51 WARNING apvg.script: Script attempt 2/2 failed: Gemini is temporarily rate limiting requests.
+2026-10-29 01:24:51 WARNING apvg.script: Using template script (Google Gemini is rate limiting requests right now, so the built-in template script was used. Try again in a minute for an AI script.).
+2026-10-29 01:24:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:51 WARNING apvg.script: Script attempt 1/2 failed: Could not reach Gemini.
+2026-10-29 01:24:51 WARNING apvg.script: Script attempt 2/2 failed: Could not reach Gemini.
+2026-10-29 01:24:51 WARNING apvg.script: Using template script (Could not reach Google Gemini, so the built-in template script was used.).
+2026-10-29 01:24:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:51 WARNING apvg.script: Script attempt 1/2 failed: fact guard rejected copy: unsupported number '1,999,000' in: "Yours for only $1,999,000."
+2026-10-29 01:24:51 WARNING apvg.script: Script attempt 2/2 failed: fact guard rejected copy: unsupported number '1,999,000' in: "Yours for only $1,999,000."
+2026-10-29 01:24:51 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 01:24:51 WARNING apvg.script: Technical detail: fact guard rejected copy: unsupported number '1,999,000' in: "Yours for only $1,999,000."
+2026-10-29 01:24:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:51 WARNING apvg.script: Script attempt 1/2 failed: expected 4 scenes, got 3
+2026-10-29 01:24:51 WARNING apvg.script: Script attempt 2/2 failed: expected 4 scenes, got 3
+2026-10-29 01:24:51 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 01:24:51 WARNING apvg.script: Technical detail: expected 4 scenes, got 3
+2026-10-29 01:24:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:51 WARNING apvg.script: Script attempt 1/2 failed: intro narration too long (40 > 13)
+2026-10-29 01:24:51 WARNING apvg.script: Script attempt 2/2 failed: intro narration too long (40 > 13)
+2026-10-29 01:24:51 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 01:24:51 WARNING apvg.script: Technical detail: intro narration too long (40 > 13)
+2026-10-29 01:24:51 WARNING apvg.script: Using template script (No OpenAI-compatible API key is configured, so the built-in template script was used. Add a key in Settings to use AI scripts.).
+2026-10-29 01:24:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:51 INFO    apvg.settings: Credential removed for gemini.
+2026-10-29 01:24:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:51 WARNING apvg.settings: Could not read secrets.json (Expecting property name enclosed in double quotes: line 1 column 2 (char 1)); using defaults.
+2026-10-29 01:24:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:51 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:24:51 WARNING apvg.tts: edge attempt 1 failed: Edge is unavailable
+2026-10-29 01:24:51 WARNING apvg.tts: edge attempt 2 failed: Edge is unavailable
+2026-10-29 01:24:51 WARNING apvg.tts: Primary voice engine 'edge' failed: Edge is unavailable
+2026-10-29 01:24:51 WARNING apvg.tts: edge attempt 1 failed: Edge is down
+2026-10-29 01:24:51 WARNING apvg.tts: Primary voice engine 'edge' failed: Edge is down
+2026-10-29 01:24:51 WARNING apvg.tts: edge attempt 1 failed: edge failed
+2026-10-29 01:24:51 WARNING apvg.tts: Primary voice engine 'edge' failed: edge failed
+2026-10-29 01:24:51 WARNING apvg.tts: windows_sapi attempt 1 failed: windows_sapi failed
+2026-10-29 01:24:51 WARNING apvg.tts: edge attempt 1 failed: temporary network issue
+2026-10-29 01:24:51 WARNING apvg.tts: edge attempt 1 failed: bad key
+2026-10-29 01:24:51 WARNING apvg.tts: Primary voice engine 'edge' failed: bad key
+2026-10-29 01:28:42 INFO    apvg: Connection test (llm): ok=True code=connected
+2026-10-29 01:28:43 WARNING apvg.script: Script attempt 1/2 failed: Gemini HTTP 404: {
+  "error": {
+    "code": 404,
+    "message": "This model models/gemini-2.5-flash is no longer available to new users. Please update your code to use models/gemini-3.8-flash for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).",
+    "status": "NOT_FOUND"
+  }
+}
+
+2026-10-29 01:28:43 WARNING apvg.script: Using template script (Google Gemini does not recognise that model, so the built-in template script was used.).
+2026-10-29 01:28:43 WARNING apvg.script: Technical detail: Gemini HTTP 404: {
+  "error": {
+    "code": 404,
+    "message": "This model models/gemini-2.5-flash is no longer available to new users. Please update your code to use models/gemini-3.8-flash for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).",
+    "status": "NOT_FOUND"
+  }
+}
+
+2026-10-29 01:37:56 INFO    apvg: Connection test (llm): ok=True code=connected
+2026-10-29 01:38:03 WARNING apvg.script: Script attempt 1/2 failed: Gemini response was truncated (MAX_TOKENS)
+2026-10-29 01:38:11 WARNING apvg.script: Script attempt 2/2 failed: Gemini response was truncated (MAX_TOKENS)
+2026-10-29 01:38:11 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 01:38:11 WARNING apvg.script: Technical detail: Gemini response was truncated (MAX_TOKENS)
+2026-10-29 01:40:05 INFO    apvg.script: AI script generated with gemini/gemini-3.5-flash in 1 attempt(s).
+2026-10-29 01:46:19 INFO    apvg.ffmpeg: Using bundled FFmpeg from imageio-ffmpeg.
+2026-10-29 01:46:23 INFO    apvg.music: Added music track aed14acd78bc47dab72cb9dfdfbdb698 (piano.wav).
+2026-10-29 01:46:23 INFO    apvg.music: Removed music track aed14acd78bc47dab72cb9dfdfbdb698.
+2026-10-29 01:46:23 INFO    apvg.music: Added music track 069e63bbf0e14e97ba0d9b2a1e866c13 (tagged.wav).
+2026-10-29 01:46:23 INFO    apvg.music: Added music track 8e6192f0a5c542429151d845966576d8 (a.wav).
+2026-10-29 01:46:24 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:46:24 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:46:24 WARNING apvg: POST /api/settings → forbidden (Your session token expired. Reload the page and try again.)
+2026-10-29 01:46:24 WARNING apvg: POST /api/settings → settings_error (Speech speed must be between 0.5 and 2.0.)
+2026-10-29 01:46:24 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:46:24 INFO    apvg.settings: Credential removed for gemini.
+2026-10-29 01:46:24 WARNING apvg: GET /api/settings → forbidden (This app only accepts requests from this computer.)
+2026-10-29 01:46:24 WARNING apvg: POST /api/script → validation_error (Location is required.)
+2026-10-29 01:46:24 WARNING apvg: POST /api/script → validation_error (Select 4–8 photos first.)
+2026-10-29 01:46:24 WARNING apvg: POST /api/generate → invalid_image (Please add at least 4 property photos.)
+2026-10-29 01:46:24 WARNING apvg: POST /api/generate → invalid_image ('photo0.gif' is not a supported image type.)
+2026-10-29 01:46:24 WARNING apvg: POST /api/generate → validation_error (Property name is required.)
+2026-10-29 01:46:24 INFO    apvg: Job bc485abc8e4047faa5ae4195349341d9 finished in 0.0s (template, 68.4 KB)
+2026-10-29 01:46:24 INFO    apvg: Job da47ee00be4c4e438d51e096dc697111 finished in 0.0s (template, 68.4 KB)
+2026-10-29 01:46:24 WARNING apvg: POST /api/generate → validation_error (Choose a track from the library, or select 'No music'.)
+2026-10-29 01:46:24 WARNING apvg.script: Using template script (No Google Gemini API key is configured, so the built-in template script was used. Add a key in Settings to use AI scripts.).
+2026-10-29 01:46:24 INFO    apvg: Job f44e1cc17ec644019c0e0537b4cc512a cancelled by user.
+2026-10-29 01:46:24 INFO    apvg: Job ea60948f26584942a38eb64a9d627f8d finished in 0.2s (template, 68.4 KB)
+2026-10-29 01:46:24 INFO    apvg.music: Added music track a331cd89cb5b46e4ac1d3962e99d1e5d (piano.wav).
+2026-10-29 01:46:24 INFO    apvg.music: Removed music track a331cd89cb5b46e4ac1d3962e99d1e5d.
+2026-10-29 01:46:25 WARNING apvg: POST /api/music → invalid_music (That audio file could not be read.)
+2026-10-29 01:46:25 WARNING apvg: GET /api/health → forbidden (This app only accepts requests from this computer.)
+2026-10-29 01:46:25 WARNING apvg.script: Using template script (No Google Gemini API key is configured, so the built-in template script was used. Add a key in Settings to use AI scripts.).
+2026-10-29 01:46:25 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:46:25 WARNING apvg.script: Using template script (Template mode is enabled in Settings, so the built-in script was used.).
+2026-10-29 01:46:25 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:46:25 INFO    apvg.script: AI script generated with gemini/gemini-3.5-flash in 1 attempt(s).
+2026-10-29 01:46:25 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:46:25 INFO    apvg.script: AI script generated with gemini/gemini-3.5-flash in 1 attempt(s).
+2026-10-29 01:46:25 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:46:25 WARNING apvg.script: Script attempt 1/2 failed: could not parse JSON from 34 chars of model output
+2026-10-29 01:46:25 WARNING apvg.script: Script attempt 2/2 failed: could not parse JSON from 34 chars of model output
+2026-10-29 01:46:25 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 01:46:25 WARNING apvg.script: Technical detail: could not parse JSON from 34 chars of model output
+2026-10-29 01:46:25 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:46:25 WARNING apvg.script: Script attempt 1/2 failed: The Gemini API key was rejected.
+2026-10-29 01:46:25 WARNING apvg.script: Using template script (Google Gemini rejected the API key, so the built-in template script was used. Update the key in Settings to use AI scripts.).
+2026-10-29 01:46:25 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:46:25 WARNING apvg.script: Script attempt 1/2 failed: Gemini is temporarily rate limiting requests.
+2026-10-29 01:46:25 WARNING apvg.script: Script attempt 2/2 failed: Gemini is temporarily rate limiting requests.
+2026-10-29 01:46:25 WARNING apvg.script: Using template script (Google Gemini is rate limiting requests right now, so the built-in template script was used. Try again in a minute for an AI script.).
+2026-10-29 01:46:25 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:46:25 WARNING apvg.script: Script attempt 1/2 failed: Could not reach Gemini.
+2026-10-29 01:46:25 WARNING apvg.script: Script attempt 2/2 failed: Could not reach Gemini.
+2026-10-29 01:46:25 WARNING apvg.script: Using template script (Could not reach Google Gemini, so the built-in template script was used.).
+2026-10-29 01:46:25 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:46:25 WARNING apvg.script: Script attempt 1/2 failed: fact guard rejected copy: unsupported number '1,999,000' in: "Yours for only $1,999,000."
+2026-10-29 01:46:25 WARNING apvg.script: Script attempt 2/2 failed: fact guard rejected copy: unsupported number '1,999,000' in: "Yours for only $1,999,000."
+2026-10-29 01:46:25 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 01:46:25 WARNING apvg.script: Technical detail: fact guard rejected copy: unsupported number '1,999,000' in: "Yours for only $1,999,000."
+2026-10-29 01:46:25 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:46:25 WARNING apvg.script: Script attempt 1/2 failed: expected 4 scenes, got 3
+2026-10-29 01:46:25 WARNING apvg.script: Script attempt 2/2 failed: expected 4 scenes, got 3
+2026-10-29 01:46:25 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 01:46:25 WARNING apvg.script: Technical detail: expected 4 scenes, got 3
+2026-10-29 01:46:25 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:46:25 WARNING apvg.script: Script attempt 1/2 failed: intro narration too long (40 > 13)
+2026-10-29 01:46:25 WARNING apvg.script: Script attempt 2/2 failed: intro narration too long (40 > 13)
+2026-10-29 01:46:25 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 01:46:25 WARNING apvg.script: Technical detail: intro narration too long (40 > 13)
+2026-10-29 01:46:25 WARNING apvg.script: Using template script (No OpenAI-compatible API key is configured, so the built-in template script was used. Add a key in Settings to use AI scripts.).
+2026-10-29 01:46:25 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:46:25 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:46:25 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:46:25 INFO    apvg.settings: Credential removed for gemini.
+2026-10-29 01:46:25 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:46:25 WARNING apvg.settings: Could not read secrets.json (Expecting property name enclosed in double quotes: line 1 column 2 (char 1)); using defaults.
+2026-10-29 01:46:25 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:46:25 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:46:25 WARNING apvg.tts: edge attempt 1 failed: Edge is unavailable
+2026-10-29 01:46:25 WARNING apvg.tts: edge attempt 2 failed: Edge is unavailable
+2026-10-29 01:46:25 WARNING apvg.tts: Primary voice engine 'edge' failed: Edge is unavailable
+2026-10-29 01:46:25 WARNING apvg.tts: edge attempt 1 failed: Edge is down
+2026-10-29 01:46:25 WARNING apvg.tts: Primary voice engine 'edge' failed: Edge is down
+2026-10-29 01:46:25 WARNING apvg.tts: edge attempt 1 failed: edge failed
+2026-10-29 01:46:25 WARNING apvg.tts: Primary voice engine 'edge' failed: edge failed
+2026-10-29 01:46:25 WARNING apvg.tts: windows_sapi attempt 1 failed: windows_sapi failed
+2026-10-29 01:46:25 WARNING apvg.tts: edge attempt 1 failed: temporary network issue
+2026-10-29 01:46:25 WARNING apvg.tts: edge attempt 1 failed: bad key
+2026-10-29 01:46:25 WARNING apvg.tts: Primary voice engine 'edge' failed: bad key
+2026-10-29 01:54:48 INFO    apvg.ffmpeg: Using bundled FFmpeg from imageio-ffmpeg.
+2026-10-29 01:54:51 INFO    apvg.music: Added music track 97adc5b7014b43f9b524318557b18ce9 (piano.wav).
+2026-10-29 01:54:51 INFO    apvg.music: Removed music track 97adc5b7014b43f9b524318557b18ce9.
+2026-10-29 01:54:51 INFO    apvg.music: Added music track 45dcf599cf5b4e8d9c059f6c24d516a1 (tagged.wav).
+2026-10-29 01:54:52 INFO    apvg.music: Added music track 7d95bb3aef974cf8a649c282b56b9742 (a.wav).
+2026-10-29 01:54:53 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:54:53 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:54:53 WARNING apvg: POST /api/settings → forbidden (Your session token expired. Reload the page and try again.)
+2026-10-29 01:54:53 WARNING apvg: POST /api/settings → settings_error (Speech speed must be between 0.5 and 2.0.)
+2026-10-29 01:54:53 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:54:53 INFO    apvg.settings: Credential removed for gemini.
+2026-10-29 01:54:53 WARNING apvg: GET /api/settings → forbidden (This app only accepts requests from this computer.)
+2026-10-29 01:54:53 WARNING apvg: POST /api/script → validation_error (Location is required.)
+2026-10-29 01:54:53 WARNING apvg: POST /api/script → validation_error (Select 4–8 photos first.)
+2026-10-29 01:54:53 WARNING apvg: POST /api/generate → invalid_image (Please add at least 4 property photos.)
+2026-10-29 01:54:53 WARNING apvg: POST /api/generate → invalid_image ('photo0.gif' is not a supported image type.)
+2026-10-29 01:54:53 WARNING apvg: POST /api/generate → validation_error (Property name is required.)
+2026-10-29 01:54:53 INFO    apvg: Job 2d1ffc207bbc44c4903889ad495023cb finished in 0.0s (template, 68.4 KB)
+2026-10-29 01:54:53 INFO    apvg: Job 4c0fea045867431ea445c28c8710d0ad finished in 0.0s (template, 68.4 KB)
+2026-10-29 01:54:53 WARNING apvg: POST /api/generate → validation_error (Choose a track from the library, or select 'No music'.)
+2026-10-29 01:54:53 WARNING apvg.script: Using template script (No Google Gemini API key is configured, so the built-in template script was used. Add a key in Settings to use AI scripts.).
+2026-10-29 01:54:53 INFO    apvg: Job aadc9c56bc904584bb9017e88d98a3e4 cancelled by user.
+2026-10-29 01:54:53 INFO    apvg: Job 26d9b76b78fb41aa9571e3e3edc0b398 finished in 0.2s (template, 68.4 KB)
+2026-10-29 01:54:53 INFO    apvg.music: Added music track e7270e49411f46499af7080bf4e42263 (piano.wav).
+2026-10-29 01:54:53 INFO    apvg.music: Removed music track e7270e49411f46499af7080bf4e42263.
+2026-10-29 01:54:53 WARNING apvg: POST /api/music → invalid_music (That audio file could not be read.)
+2026-10-29 01:54:53 WARNING apvg: GET /api/health → forbidden (This app only accepts requests from this computer.)
+2026-10-29 01:54:53 WARNING apvg.script: Using template script (No Google Gemini API key is configured, so the built-in template script was used. Add a key in Settings to use AI scripts.).
+2026-10-29 01:54:53 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:54:53 WARNING apvg.script: Using template script (Template mode is enabled in Settings, so the built-in script was used.).
+2026-10-29 01:54:53 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:54:53 INFO    apvg.script: AI script generated with gemini/gemini-3.5-flash in 1 attempt(s).
+2026-10-29 01:54:53 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:54:53 INFO    apvg.script: AI script generated with gemini/gemini-3.5-flash in 1 attempt(s).
+2026-10-29 01:54:53 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:54:53 WARNING apvg.script: Script attempt 1/2 failed: could not parse JSON from 34 chars of model output
+2026-10-29 01:54:53 WARNING apvg.script: Script attempt 2/2 failed: could not parse JSON from 34 chars of model output
+2026-10-29 01:54:53 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 01:54:53 WARNING apvg.script: Technical detail: could not parse JSON from 34 chars of model output
+2026-10-29 01:54:53 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:54:53 WARNING apvg.script: Script attempt 1/2 failed: The Gemini API key was rejected.
+2026-10-29 01:54:53 WARNING apvg.script: Using template script (Google Gemini rejected the API key, so the built-in template script was used. Update the key in Settings to use AI scripts.).
+2026-10-29 01:54:53 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:54:53 WARNING apvg.script: Script attempt 1/2 failed: Gemini is temporarily rate limiting requests.
+2026-10-29 01:54:53 WARNING apvg.script: Script attempt 2/2 failed: Gemini is temporarily rate limiting requests.
+2026-10-29 01:54:53 WARNING apvg.script: Using template script (Google Gemini is rate limiting requests right now, so the built-in template script was used. Try again in a minute for an AI script.).
+2026-10-29 01:54:54 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:54:54 WARNING apvg.script: Script attempt 1/2 failed: Could not reach Gemini.
+2026-10-29 01:54:54 WARNING apvg.script: Script attempt 2/2 failed: Could not reach Gemini.
+2026-10-29 01:54:54 WARNING apvg.script: Using template script (Could not reach Google Gemini, so the built-in template script was used.).
+2026-10-29 01:54:54 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:54:54 WARNING apvg.script: Script attempt 1/2 failed: fact guard rejected copy: unsupported number '1,999,000' in: "Yours for only $1,999,000."
+2026-10-29 01:54:54 WARNING apvg.script: Script attempt 2/2 failed: fact guard rejected copy: unsupported number '1,999,000' in: "Yours for only $1,999,000."
+2026-10-29 01:54:54 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 01:54:54 WARNING apvg.script: Technical detail: fact guard rejected copy: unsupported number '1,999,000' in: "Yours for only $1,999,000."
+2026-10-29 01:54:54 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:54:54 WARNING apvg.script: Script attempt 1/2 failed: expected 4 scenes, got 3
+2026-10-29 01:54:54 WARNING apvg.script: Script attempt 2/2 failed: expected 4 scenes, got 3
+2026-10-29 01:54:54 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 01:54:54 WARNING apvg.script: Technical detail: expected 4 scenes, got 3
+2026-10-29 01:54:54 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:54:54 WARNING apvg.script: Script attempt 1/2 failed: intro narration too long (40 > 13)
+2026-10-29 01:54:54 WARNING apvg.script: Script attempt 2/2 failed: intro narration too long (40 > 13)
+2026-10-29 01:54:54 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 01:54:54 WARNING apvg.script: Technical detail: intro narration too long (40 > 13)
+2026-10-29 01:54:54 WARNING apvg.script: Using template script (No OpenAI-compatible API key is configured, so the built-in template script was used. Add a key in Settings to use AI scripts.).
+2026-10-29 01:54:54 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:54:54 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:54:54 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:54:54 INFO    apvg.settings: Credential removed for gemini.
+2026-10-29 01:54:54 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:54:54 WARNING apvg.settings: Could not read secrets.json (Expecting property name enclosed in double quotes: line 1 column 2 (char 1)); using defaults.
+2026-10-29 01:54:54 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:54:54 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 01:54:54 WARNING apvg.tts: edge attempt 1 failed: Edge is unavailable
+2026-10-29 01:54:54 WARNING apvg.tts: edge attempt 2 failed: Edge is unavailable
+2026-10-29 01:54:54 WARNING apvg.tts: Primary voice engine 'edge' failed: Edge is unavailable
+2026-10-29 01:54:54 WARNING apvg.tts: edge attempt 1 failed: Edge is down
+2026-10-29 01:54:54 WARNING apvg.tts: Primary voice engine 'edge' failed: Edge is down
+2026-10-29 01:54:54 WARNING apvg.tts: edge attempt 1 failed: edge failed
+2026-10-29 01:54:54 WARNING apvg.tts: Primary voice engine 'edge' failed: edge failed
+2026-10-29 01:54:54 WARNING apvg.tts: windows_sapi attempt 1 failed: windows_sapi failed
+2026-10-29 01:54:54 WARNING apvg.tts: edge attempt 1 failed: temporary network issue
+2026-10-29 01:54:54 WARNING apvg.tts: edge attempt 1 failed: bad key
+2026-10-29 01:54:54 WARNING apvg.tts: Primary voice engine 'edge' failed: bad key
+2026-10-29 08:45:38 INFO    apvg.ffmpeg: Using bundled FFmpeg from imageio-ffmpeg.
+2026-10-29 08:45:43 INFO    apvg.music: Added music track 9a9b942d11f14b1abb18b622580a9b2a (piano.wav).
+2026-10-29 08:45:43 INFO    apvg.music: Removed music track 9a9b942d11f14b1abb18b622580a9b2a.
+2026-10-29 08:45:44 INFO    apvg.music: Added music track 5deb8ad1ecf64b96bad69921adf93712 (tagged.wav).
+2026-10-29 08:45:44 INFO    apvg.music: Added music track e172bb354ace4f40a15ee72bbbb963b6 (a.wav).
+2026-10-29 08:45:45 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 08:45:45 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 08:45:45 WARNING apvg: POST /api/settings → forbidden (Your session token expired. Reload the page and try again.)
+2026-10-29 08:45:45 WARNING apvg: POST /api/settings → settings_error (Speech speed must be between 0.5 and 2.0.)
+2026-10-29 08:45:45 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 08:45:45 INFO    apvg.settings: Credential removed for gemini.
+2026-10-29 08:45:45 WARNING apvg: GET /api/settings → forbidden (This app only accepts requests from this computer.)
+2026-10-29 08:45:45 WARNING apvg: POST /api/script → validation_error (Location is required.)
+2026-10-29 08:45:45 WARNING apvg: POST /api/script → validation_error (Select 4–8 photos first.)
+2026-10-29 08:45:46 WARNING apvg: POST /api/generate → invalid_image (Please add at least 4 property photos.)
+2026-10-29 08:45:46 WARNING apvg: POST /api/generate → invalid_image ('photo0.gif' is not a supported image type.)
+2026-10-29 08:45:46 WARNING apvg: POST /api/generate → validation_error (Property name is required.)
+2026-10-29 08:45:46 INFO    apvg: Job eb634c7dce264578bb640c28b87ccbfa finished in 0.1s (template, 68.4 KB)
+2026-10-29 08:45:46 INFO    apvg: Job 434f0cc7dda4481aa4746b35d6992cb5 finished in 0.1s (template, 68.4 KB)
+2026-10-29 08:45:46 WARNING apvg: POST /api/generate → validation_error (Choose a track from the library, or select 'No music'.)
+2026-10-29 08:45:46 WARNING apvg.script: Using template script (No Google Gemini API key is configured, so the built-in template script was used. Add a key in Settings to use AI scripts.).
+2026-10-29 08:45:46 INFO    apvg: Job c7f3f3c72b6849928d86cad04761da68 cancelled by user.
+2026-10-29 08:45:47 INFO    apvg: Job a306d2ada5364fb49f56b59f50c06a39 finished in 0.4s (template, 68.4 KB)
+2026-10-29 08:45:47 INFO    apvg.music: Added music track 180bec828c3a4d408aec79ecb0785aa2 (piano.wav).
+2026-10-29 08:45:47 INFO    apvg.music: Removed music track 180bec828c3a4d408aec79ecb0785aa2.
+2026-10-29 08:45:47 WARNING apvg: POST /api/music → invalid_music (That audio file could not be read.)
+2026-10-29 08:45:47 WARNING apvg: GET /api/health → forbidden (This app only accepts requests from this computer.)
+2026-10-29 08:45:47 WARNING apvg.script: Using template script (No Google Gemini API key is configured, so the built-in template script was used. Add a key in Settings to use AI scripts.).
+2026-10-29 08:45:47 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 08:45:47 WARNING apvg.script: Using template script (Template mode is enabled in Settings, so the built-in script was used.).
+2026-10-29 08:45:47 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 08:45:47 INFO    apvg.script: AI script generated with gemini/gemini-3.5-flash in 1 attempt(s).
+2026-10-29 08:45:47 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 08:45:47 INFO    apvg.script: AI script generated with gemini/gemini-3.5-flash in 1 attempt(s).
+2026-10-29 08:45:47 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 08:45:47 WARNING apvg.script: Script attempt 1/2 failed: could not parse JSON from 34 chars of model output
+2026-10-29 08:45:47 WARNING apvg.script: Script attempt 2/2 failed: could not parse JSON from 34 chars of model output
+2026-10-29 08:45:47 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 08:45:47 WARNING apvg.script: Technical detail: could not parse JSON from 34 chars of model output
+2026-10-29 08:45:47 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 08:45:47 WARNING apvg.script: Script attempt 1/2 failed: The Gemini API key was rejected.
+2026-10-29 08:45:47 WARNING apvg.script: Using template script (Google Gemini rejected the API key, so the built-in template script was used. Update the key in Settings to use AI scripts.).
+2026-10-29 08:45:47 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 08:45:47 WARNING apvg.script: Script attempt 1/2 failed: Gemini is temporarily rate limiting requests.
+2026-10-29 08:45:47 WARNING apvg.script: Script attempt 2/2 failed: Gemini is temporarily rate limiting requests.
+2026-10-29 08:45:47 WARNING apvg.script: Using template script (Google Gemini is rate limiting requests right now, so the built-in template script was used. Try again in a minute for an AI script.).
+2026-10-29 08:45:47 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 08:45:47 WARNING apvg.script: Script attempt 1/2 failed: Could not reach Gemini.
+2026-10-29 08:45:47 WARNING apvg.script: Script attempt 2/2 failed: Could not reach Gemini.
+2026-10-29 08:45:47 WARNING apvg.script: Using template script (Could not reach Google Gemini, so the built-in template script was used.).
+2026-10-29 08:45:47 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 08:45:47 WARNING apvg.script: Script attempt 1/2 failed: fact guard rejected copy: unsupported number '1,999,000' in: "Yours for only $1,999,000."
+2026-10-29 08:45:47 WARNING apvg.script: Script attempt 2/2 failed: fact guard rejected copy: unsupported number '1,999,000' in: "Yours for only $1,999,000."
+2026-10-29 08:45:47 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 08:45:47 WARNING apvg.script: Technical detail: fact guard rejected copy: unsupported number '1,999,000' in: "Yours for only $1,999,000."
+2026-10-29 08:45:47 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 08:45:47 WARNING apvg.script: Script attempt 1/2 failed: expected 4 scenes, got 3
+2026-10-29 08:45:47 WARNING apvg.script: Script attempt 2/2 failed: expected 4 scenes, got 3
+2026-10-29 08:45:47 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 08:45:47 WARNING apvg.script: Technical detail: expected 4 scenes, got 3
+2026-10-29 08:45:47 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 08:45:47 WARNING apvg.script: Script attempt 1/2 failed: intro narration too long (40 > 13)
+2026-10-29 08:45:47 WARNING apvg.script: Script attempt 2/2 failed: intro narration too long (40 > 13)
+2026-10-29 08:45:47 WARNING apvg.script: Using template script (The AI response could not be validated (it may have included details that were not supplied), so the built-in template script was used.).
+2026-10-29 08:45:47 WARNING apvg.script: Technical detail: intro narration too long (40 > 13)
+2026-10-29 08:45:47 WARNING apvg.script: Using template script (No OpenAI-compatible API key is configured, so the built-in template script was used. Add a key in Settings to use AI scripts.).
+2026-10-29 08:45:47 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 08:45:47 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 08:45:47 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 08:45:47 INFO    apvg.settings: Credential removed for gemini.
+2026-10-29 08:45:47 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 08:45:47 WARNING apvg.settings: Could not read secrets.json (Expecting property name enclosed in double quotes: line 1 column 2 (char 1)); using defaults.
+2026-10-29 08:45:47 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 08:45:47 INFO    apvg.settings: Credential updated for gemini.
+2026-10-29 08:45:48 WARNING apvg.tts: edge attempt 1 failed: Edge is unavailable
+2026-10-29 08:45:48 WARNING apvg.tts: edge attempt 2 failed: Edge is unavailable
+2026-10-29 08:45:48 WARNING apvg.tts: Primary voice engine 'edge' failed: Edge is unavailable
+2026-10-29 08:45:48 WARNING apvg.tts: edge attempt 1 failed: Edge is down
+2026-10-29 08:45:48 WARNING apvg.tts: Primary voice engine 'edge' failed: Edge is down
+2026-10-29 08:45:48 WARNING apvg.tts: edge attempt 1 failed: edge failed
+2026-10-29 08:45:48 WARNING apvg.tts: Primary voice engine 'edge' failed: edge failed
+2026-10-29 08:45:48 WARNING apvg.tts: windows_sapi attempt 1 failed: windows_sapi failed
+2026-10-29 08:45:48 WARNING apvg.tts: edge attempt 1 failed: temporary network issue
+2026-10-29 08:45:48 WARNING apvg.tts: edge attempt 1 failed: bad key
+2026-10-29 08:45:48 WARNING apvg.tts: Primary voice engine 'edge' failed: bad key

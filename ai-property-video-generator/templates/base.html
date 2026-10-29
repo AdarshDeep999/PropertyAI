@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>{% block title %}AI Property Video Generator{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230d1626'/><path d='M8 20V12l8-5 8 5v8' stroke='%23c79a4b' stroke-width='2.4' fill='none' stroke-linejoin='round'/></svg>">
+</head>
+<body class="page-{{ active_page }}">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <a class="brand" href="/">
+      <span class="brand__mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="28" height="28">
+          <rect width="32" height="32" rx="8" fill="currentColor"/>
+          <path d="M8 21V12.5L16 7l8 5.5V21" fill="none" stroke="#c79a4b" stroke-width="2.2" stroke-linejoin="round"/>
+          <path d="M13 21v-5h6v5" fill="none" stroke="#f7f8fa" stroke-width="1.8"/>
+        </svg>
+      </span>
+      <span class="brand__text">
+        <strong>Property Video Studio</strong>
+        <span>Photos in, marketing video out</span>
+      </span>
+    </a>
+
+    <nav class="topnav" aria-label="Main">
+      <a href="/" class="{{ 'is-active' if active_page == 'create' else '' }}">Create video</a>
+      <a href="/settings" class="{{ 'is-active' if active_page == 'settings' else '' }}">Settings</a>
+    </nav>
+
+    <div class="topbar__status">
+      {% if has_llm_key %}
+        <span class="pill pill--ok"><span class="dot"></span> AI script ready</span>
+      {% else %}
+        <span class="pill pill--neutral"><span class="dot"></span> Template mode</span>
+      {% endif %}
+    </div>
+  </header>
+
+  <main id="main" class="shell">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <p>
+      Your photos, keys and finished videos stay on your server. Background music must be a track
+      you own or are licensed to use.
+    </p>
+    <p class="footer__muted">Property Video Studio</p>
+  </footer>
+
+  <div id="toast-region" class="toast-region" role="status" aria-live="polite"></div>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

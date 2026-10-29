@@ -1,0 +1,61 @@
+{
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "crf": 20,
+    "preset": "veryfast",
+    "transition": 0.6,
+    "title_duration": 3.6,
+    "photo_duration": 4.3,
+    "cta_duration": 4.0,
+    "min_duration": 3.2,
+    "max_scene_duration": 9.0,
+    "safe_margin": 96,
+    "target_min_total": 20.0,
+    "target_max_total": 40.0,
+    "hard_max_total": 48.0
+  },
+  "narration": {
+    "padding": 0.45,
+    "max_words_per_scene": 26,
+    "max_words_intro": 30,
+    "max_words_cta": 24,
+    "lead_in": 0.25
+  },
+  "music": {
+    "default_volume": 0.30,
+    "fade_in": 1.5,
+    "fade_out": 1.8,
+    "duck_ratio": 8,
+    "duck_threshold": 0.03,
+    "duck_attack_ms": 15,
+    "duck_release_ms": 400
+  },
+  "audio": {
+    "sample_rate": 48000,
+    "bitrate": "192k",
+    "loudness_i": -16.0,
+    "true_peak": -1.5
+  },
+  "script": {
+    "max_caption_words": 9,
+    "default_tone": "warm",
+    "tones": ["warm", "premium", "concise"],
+    "llm_timeout_seconds": 25,
+    "llm_max_attempts": 2,
+    "llm_retry_delay_seconds": 1.2
+  },
+  "limits": {
+    "min_images": 4,
+    "max_images": 8,
+    "max_image_mb": 15,
+    "min_image_width": 400,
+    "min_image_height": 225,
+    "recommended_image_width": 1200,
+    "max_audio_mb": 25,
+    "min_audio_seconds": 1.0,
+    "max_request_mb": 120,
+    "min_free_disk_mb": 150
+  }
+}
