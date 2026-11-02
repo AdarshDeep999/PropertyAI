@@ -1014,3 +1014,15 @@
 2026-11-02 17:37:05 WARNING apvg.tts: edge attempt 1 failed: temporary network issue
 2026-11-02 17:37:05 WARNING apvg.tts: edge attempt 1 failed: bad key
 2026-11-02 17:37:05 WARNING apvg.tts: Primary voice engine 'edge' failed: bad key
+2026-11-02 17:37:29 INFO    apvg.ffmpeg: Using bundled FFmpeg from imageio-ffmpeg.
+2026-11-02 17:41:59 INFO    apvg: Sample property data served.
+2026-11-02 18:14:12 WARNING apvg.script: Script attempt 1/2 failed: Gemini HTTP 503: {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+2026-11-02 18:14:17 INFO    apvg.script: AI script generated with gemini/gemini-3.5-flash in 2 attempt(s).
+2026-11-02 18:17:44 INFO    apvg: Job 26d0f8885bb342b7b1939fb43b5dc933 finished in 65.8s (ai, 6.2 MB)
