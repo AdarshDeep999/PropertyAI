@@ -3,6 +3,7 @@
     "width": 1920,
     "height": 1080,
     "fps": 30,
+    "canvas_scale": 1.5,
     "crf": 20,
     "preset": "veryfast",
     "transition": 0.6,

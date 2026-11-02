@@ -12,13 +12,14 @@ while FFmpeg is still running.
 from __future__ import annotations
 
 import dataclasses
+import json
 import threading
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from services.storage import cleanup, new_id
+from services.storage import UPLOAD_DIR, cleanup, new_id
 
 STAGES: list[tuple[str, str]] = [
     ("validate", "Validating property information"),
@@ -53,8 +54,15 @@ class Job:
     # Filesystem paths for serving media stay here and are NEVER serialised:
     # the browser only receives opaque /video/<id> style URLs.
     media: dict[str, str] = dataclasses.field(default_factory=dict)
+    # Progress inside the stage that is currently running (0.0 - 1.0). Scene
+    # rendering uses it so the bar keeps moving between stage boundaries.
+    fraction: float = 0.0
     cancel_event: threading.Event = dataclasses.field(default_factory=threading.Event)
     lock: threading.Lock = dataclasses.field(default_factory=threading.Lock)
+
+    @property
+    def state_path(self) -> Path:
+        return Path(self.work_dir) / "job.json"
 
     def __post_init__(self) -> None:
         if not self.stages:
@@ -65,6 +73,7 @@ class Job:
     def begin(self) -> None:
         with self.lock:
             self.status = "running"
+            self._save_locked()
 
     def set_stage(self, stage_id: str, status: str, detail: str = "") -> None:
         with self.lock:
@@ -73,7 +82,21 @@ class Job:
                     stage["status"] = status
                     if detail:
                         stage["detail"] = detail
+                    self.fraction = 1.0 if status in (STATUS_DONE, STATUS_SKIPPED) else 0.0
                     break
+            self._save_locked()
+
+    def set_progress(self, stage_id: str, detail: str, fraction: float) -> None:
+        """Update the detail text and the completed fraction of a running stage."""
+        with self.lock:
+            for stage in self.stages:
+                if stage["id"] == stage_id:
+                    stage["status"] = STATUS_RUNNING
+                    if detail:
+                        stage["detail"] = detail
+                    break
+            self.fraction = max(0.0, min(1.0, float(fraction)))
+            self._save_locked()
 
     def complete_stage(self, stage_id: str, detail: str = "") -> None:
         self.set_stage(stage_id, STATUS_DONE, detail)
@@ -88,6 +111,7 @@ class Job:
         with self.lock:
             if message not in self.warnings:
                 self.warnings.append(message)
+                self._save_locked()
 
     def fail(self, error: dict[str, Any]) -> None:
         with self.lock:
@@ -98,6 +122,7 @@ class Job:
                 if stage["status"] == STATUS_RUNNING:
                     stage["status"] = STATUS_FAILED
                     break
+            self._save_locked()
 
     def succeed(self, result: dict[str, Any]) -> None:
         with self.lock:
@@ -107,6 +132,8 @@ class Job:
             for stage in self.stages:
                 if stage["status"] in (STATUS_PENDING, STATUS_RUNNING):
                     stage["status"] = STATUS_DONE
+            self.fraction = 1.0
+            self._save_locked()
 
     def cancel(self) -> bool:
         if self.status in ("done", "failed", "cancelled"):
@@ -121,7 +148,49 @@ class Job:
     def progress_percent(self) -> int:
         total = len([s for s in self.stages if s["status"] != STATUS_SKIPPED]) or 1
         done = len([s for s in self.stages if s["status"] == STATUS_DONE])
-        return int(round(100 * min(done, total) / total))
+        running = self.fraction if any(s["status"] == STATUS_RUNNING for s in self.stages) else 0.0
+        return int(round(100 * min(done + running, total) / total))
+
+    # -- persistence ------------------------------------------------------- #
+    def snapshot(self) -> dict[str, Any]:
+        return {
+            "id": self.id,
+            "status": self.status,
+            "created_at": self.created_at,
+            "finished_at": self.finished_at,
+            "stages": [dict(stage) for stage in self.stages],
+            "warnings": list(self.warnings),
+            "error": dict(self.error) if self.error else None,
+            "result": dict(self.result) if self.result else None,
+            "media": dict(self.media),
+            "fraction": self.fraction,
+        }
+
+    def _save_locked(self) -> None:
+        """Persist the job so a page refresh (or a process restart) can find it."""
+        try:
+            path = self.state_path
+            path.parent.mkdir(parents=True, exist_ok=True)
+            tmp = path.with_suffix(".json.tmp")
+            tmp.write_text(json.dumps(self.snapshot()), encoding="utf-8")
+            tmp.replace(path)
+        except OSError:  # persistence is a convenience, never a render blocker
+            pass
+
+    @classmethod
+    def from_snapshot(cls, data: dict[str, Any], work_dir: Path) -> "Job":
+        job = cls(id=str(data.get("id") or work_dir.name), work_dir=work_dir)
+        job.status = str(data.get("status") or "queued")
+        job.created_at = str(data.get("created_at") or _now())
+        job.finished_at = data.get("finished_at")
+        if isinstance(data.get("stages"), list) and data["stages"]:
+            job.stages = [dict(stage) for stage in data["stages"]]
+        job.warnings = [str(item) for item in data.get("warnings") or []]
+        job.error = data.get("error") if isinstance(data.get("error"), dict) else None
+        job.result = data.get("result") if isinstance(data.get("result"), dict) else None
+        job.media = data.get("media") if isinstance(data.get("media"), dict) else {}
+        job.fraction = float(data.get("fraction") or 0.0)
+        return job
 
     def to_public(self) -> dict[str, Any]:
         with self.lock:
@@ -140,16 +209,62 @@ class Job:
 
 
 class JobStore:
-    def __init__(self, max_jobs: int = 40):
+    def __init__(self, work_root: Path | None = None, max_jobs: int = 40):
         self._jobs: dict[str, Job] = {}
         self._lock = threading.RLock()
         self._max_jobs = max_jobs
+        self._work_root = Path(work_root) if work_root else None
+        if self._work_root is not None:
+            self.load_existing()
+
+    def load_existing(self) -> None:
+        """Re-attach jobs written by a previous process.
+
+        A render cannot survive a restart, so an interrupted job is reported as
+        failed instead of silently hanging on the progress screen forever.
+        Finished videos are only kept if their MP4 is still on disk.
+        """
+        root = self._work_root
+        if root is None or not root.is_dir():
+            return
+        for path in sorted(root.glob("*/job.json")):
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            if not isinstance(data, dict):
+                continue
+            try:
+                job = Job.from_snapshot(data, path.parent)
+            except (TypeError, ValueError):
+                continue
+            if job.status in ("queued", "running"):
+                job.fail({
+                    "code": "interrupted",
+                    "message": "This video stopped when the app restarted.",
+                    "hint": "Your details are still in the form — generate it again.",
+                    "retryable": True,
+                })
+            elif job.status == "done":
+                video = Path(str((job.media or {}).get("video", "")))
+                if not video.is_file():
+                    job.fail({
+                        "code": "expired",
+                        "message": "That video is no longer stored on the server.",
+                        "hint": "Generate it again — it only takes a minute.",
+                        "retryable": True,
+                    })
+            with self._lock:
+                self._jobs[job.id] = job
+        with self._lock:
+            self._prune()
 
     def create(self, work_root: Path) -> Job:
         job_id = new_id()
         work_dir = work_root / job_id
         work_dir.mkdir(parents=True, exist_ok=True)
         job = Job(id=job_id, work_dir=work_dir)
+        job._save_locked()
         with self._lock:
             self._jobs[job_id] = job
             self._prune()
@@ -157,7 +272,19 @@ class JobStore:
 
     def get(self, job_id: str) -> Job | None:
         with self._lock:
-            return self._jobs.get(job_id)
+            job = self._jobs.get(job_id)
+            if job is not None or self._work_root is None:
+                return job
+            state = self._work_root / job_id / "job.json"
+            if not state.is_file():
+                return None
+            try:
+                data = json.loads(state.read_text(encoding="utf-8"))
+                job = Job.from_snapshot(data, state.parent)
+            except (OSError, json.JSONDecodeError, TypeError, ValueError):
+                return None
+            self._jobs[job.id] = job
+            return job
 
     def active(self) -> Job | None:
         with self._lock:
@@ -207,5 +334,5 @@ class RenderLock:
             pass
 
 
-jobs = JobStore()
+jobs = JobStore(UPLOAD_DIR / "jobs")
 render_lock = RenderLock()

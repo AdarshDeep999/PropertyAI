@@ -1,10 +1,9 @@
 """AI Property Video Generator — Flask application.
 
-Local-first by default: without credentials the server binds to 127.0.0.1 and
-only accepts loopback clients. For a hosted deployment set APP_USERNAME and
-APP_PASSWORD; every request then requires HTTP Basic authentication, and a
-reverse proxy should terminate HTTPS. Mutating API calls always require a CSRF
-token, and no API key is ever serialised to the browser.
+Public by default: anyone with the URL can open the studio, add photos and
+render a video. Mutating API calls still require a CSRF token, and no API key
+is ever serialised to the browser. API keys stay on the server (environment
+variables or the restricted settings file).
 
 Start with:  python app.py   (then open http://127.0.0.1:5000)
 Production:  waitress-serve --listen=0.0.0.0:8000 wsgi:app
@@ -12,8 +11,6 @@ Production:  waitress-serve --listen=0.0.0.0:8000 wsgi:app
 
 from __future__ import annotations
 
-import base64
-import binascii
 import json
 import os
 import sys
@@ -22,7 +19,6 @@ import threading
 import time
 import traceback
 from datetime import datetime, timezone
-from functools import wraps
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -92,31 +88,8 @@ ensure_dirs()
 logger = setup_logging(LOG_DIR)
 DEFAULTS = json.loads((CONFIG_DIR / "defaults.json").read_text(encoding="utf-8"))
 
-ALLOWED_LOCAL_ADDRESSES = {"127.0.0.1", "::1", "::ffff:127.0.0.1", "localhost"}
 CSRF_HEADER = "X-CSRF-Token"
 PREVIEW_TTL_SECONDS = 3600
-
-# Deployment credentials are optional. When both are set the app can serve a
-# network without exposing key-spending endpoints to anonymous visitors.
-APP_USERNAME = os.environ.get("APP_USERNAME", "").strip()
-APP_PASSWORD = os.environ.get("APP_PASSWORD", "")
-AUTH_ENABLED = bool(APP_USERNAME and APP_PASSWORD)
-
-
-def _basic_auth_ok() -> bool:
-    header = request.headers.get("Authorization", "")
-    scheme, _, payload = header.partition(" ")
-    if scheme.lower() != "basic" or not payload:
-        return False
-    try:
-        decoded = base64.b64decode(payload, validate=True).decode("utf-8")
-    except (binascii.Error, UnicodeDecodeError, ValueError):
-        return False
-    username, separator, password = decoded.partition(":")
-    if not separator:
-        return False
-    return (secrets.compare_digest(username, APP_USERNAME)
-            and secrets.compare_digest(password, APP_PASSWORD))
 
 
 # --------------------------------------------------------------------------- #
@@ -138,23 +111,6 @@ def create_app() -> Flask:
         app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
     # -- guards ------------------------------------------------------------ #
-    def local_only(view):
-        """Loopback-only unless deployment credentials turn the app public."""
-        @wraps(view)
-        def wrapper(*args, **kwargs):
-            address = (request.remote_addr or "").strip()
-            if address not in ALLOWED_LOCAL_ADDRESSES and not AUTH_ENABLED:
-                raise SecurityError("This app only accepts requests from this computer.")
-            return view(*args, **kwargs)
-
-        return wrapper
-
-    def require_auth():
-        if AUTH_ENABLED and not _basic_auth_ok():
-            return ("Authentication required.", 401,
-                    {"WWW-Authenticate": 'Basic realm="Property Video Studio", charset="UTF-8"'})
-        return None
-
     def csrf_protect():
         if request.method in ("GET", "HEAD", "OPTIONS"):
             return
@@ -165,7 +121,6 @@ def create_app() -> Flask:
         if not expected or not secrets.compare_digest(str(supplied), str(expected)):
             raise SecurityError("Your session token expired. Reload the page and try again.")
 
-    app.before_request(require_auth)
     app.before_request(csrf_protect)
 
     def csrf_token() -> str:
@@ -190,18 +145,25 @@ def create_app() -> Flask:
 
     # -- pages ------------------------------------------------------------- #
     @app.get("/")
-    @local_only
     def index():
         return render_template("index.html", **page_context(active_page="create"))
 
     @app.get("/settings")
-    @local_only
     def settings_page():
         return render_template("settings.html", **page_context(active_page="settings"))
 
     # -- health ------------------------------------------------------------ #
+    @app.get("/ping")
+    def ping():
+        """Tiny keep-alive target for an uptime cron (no auth, no heavy work).
+
+        Point cron-job.org (or any uptime monitor) at ``https://<host>/ping``
+        every 10 minutes so a free Render instance never spins down. It avoids
+        FFmpeg probing, file IO and API keys, so it costs nothing to call.
+        """
+        return jsonify({"status": "ok", "service": "property-video-studio"})
+
     @app.get("/api/health")
-    @local_only
     def api_health():
         checks = []
         try:
@@ -226,7 +188,6 @@ def create_app() -> Flask:
 
     # -- settings ---------------------------------------------------------- #
     @app.get("/api/settings")
-    @local_only
     def get_settings():
         return jsonify({
             "public": store.public(),
@@ -235,7 +196,6 @@ def create_app() -> Flask:
         })
 
     @app.post("/api/settings")
-    @local_only
     def save_settings():
         payload = _json_body()
         updated = store.update_public(payload)
@@ -250,7 +210,6 @@ def create_app() -> Flask:
                         "message": "Settings saved."})
 
     @app.post("/api/settings/secret")
-    @local_only
     def save_secret():
         payload = _json_body()
         name = str(payload.get("name") or "").strip()
@@ -263,7 +222,6 @@ def create_app() -> Flask:
                         "message": f"Key saved for {status['label']}."})
 
     @app.delete("/api/settings/secret/<name>")
-    @local_only
     def remove_secret(name: str):
         status = store.delete_secret(name)
         message = ("Key removed." if not status["configured"]
@@ -271,7 +229,6 @@ def create_app() -> Flask:
         return jsonify({"ok": True, "secret": status, "message": message})
 
     @app.post("/api/settings/test")
-    @local_only
     def test_connection():
         payload = _json_body()
         kind = str(payload.get("kind") or "llm")
@@ -292,10 +249,10 @@ def create_app() -> Flask:
 
     # -- music library ----------------------------------------------------- #
     @app.get("/api/music")
-    @local_only
     def list_music():
         return jsonify({
             "tracks": music.list_tracks(),
+            "builtin": music.builtin_tracks(),
             "usage": music.library_usage(),
             "rights_notice": music.RIGHTS_NOTICE,
             "accepted": sorted({".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac"}),
@@ -303,7 +260,6 @@ def create_app() -> Flask:
         })
 
     @app.post("/api/music")
-    @local_only
     def upload_music():
         file = request.files.get("file")
         if not file or not file.filename:
@@ -315,20 +271,22 @@ def create_app() -> Flask:
                         "message": f"Added '{track['name']}' to the music library."})
 
     @app.delete("/api/music/<track_id>")
-    @local_only
     def delete_music(track_id: str):
         music.delete_track(track_id)
         return jsonify({"ok": True, "message": "Track removed from the library."})
 
     @app.get("/media/music/<track_id>")
-    @local_only
     def serve_music(track_id: str):
         path = music.track_path(track_id)
         return send_file(path, conditional=True)
 
+    @app.get("/media/bgm/<track_id>")
+    def serve_builtin_music(track_id: str):
+        path = music.builtin_path(track_id)
+        return send_file(path, mimetype="audio/mp4", conditional=True)
+
     # -- script generation ------------------------------------------------- #
     @app.post("/api/script")
-    @local_only
     def api_script():
         payload = _json_body()
         facts = parse_property(payload.get("property") or {})
@@ -371,7 +329,6 @@ def create_app() -> Flask:
 
     # -- narration preview -------------------------------------------------- #
     @app.post("/api/narration/preview")
-    @local_only
     def api_narration_preview():
         payload = _json_body()
         text = str(payload.get("text") or "").strip()
@@ -392,7 +349,6 @@ def create_app() -> Flask:
         })
 
     @app.get("/media/preview/<preview_id>")
-    @local_only
     def serve_preview(preview_id: str):
         if not is_id(preview_id):
             raise NotFoundError("That preview is not available.")
@@ -404,7 +360,6 @@ def create_app() -> Flask:
 
     # -- generation -------------------------------------------------------- #
     @app.post("/api/generate")
-    @local_only
     def api_generate():
         form = request.form
         facts = parse_property(form)
@@ -424,7 +379,13 @@ def create_app() -> Flask:
         music_id = None
         save_to_library = _truthy(form.get("save_to_library"))
 
-        if music_mode == "library":
+        if music_mode == "builtin":
+            music_id = (form.get("music_id") or "").strip()
+            if not music_id:
+                raise ValidationError("Choose a soundtrack, or pick another music option.",
+                                      field="music")
+            music.builtin_path(music_id)  # raises a friendly NotFoundError
+        elif music_mode == "library":
             music_id = (form.get("music_id") or "").strip()
             if not music_id:
                 raise ValidationError("Choose a track from the library, or select 'No music'.",
@@ -475,7 +436,6 @@ def create_app() -> Flask:
         return jsonify({"ok": True, "job": job.to_public()}), 202
 
     @app.get("/api/sample")
-    @local_only
     def api_sample():
         sample_path = SAMPLE_DIR / "property_sample.json"
         if not sample_path.is_file():
@@ -484,7 +444,6 @@ def create_app() -> Flask:
         return jsonify(json.loads(sample_path.read_text(encoding="utf-8")))
 
     @app.post("/api/demo")
-    @local_only
     def api_demo():
         """Build a video from the shipped synthetic sample data (evaluator shortcut)."""
         sample_json = SAMPLE_DIR / "property_sample.json"
@@ -502,8 +461,8 @@ def create_app() -> Flask:
             "enable_narration": True,
             "force_template": not bool(store.get_secret("gemini")),
             "script_payload": None,
-            "music_mode": "none",
-            "music_id": None,
+            "music_mode": "builtin" if music.builtin_tracks() else "none",
+            "music_id": (music.builtin_tracks() or [{"id": None}])[0]["id"],
             "music_file": None,
             "save_to_library": False,
             "music_volume": float(store.public()["video"]["music_volume"]),
@@ -515,13 +474,11 @@ def create_app() -> Flask:
 
     # -- job status and media ---------------------------------------------- #
     @app.get("/api/jobs/<job_id>")
-    @local_only
     def job_status(job_id: str):
         job = _require_job(job_id)
         return jsonify(job.to_public())
 
     @app.post("/api/jobs/<job_id>/cancel")
-    @local_only
     def job_cancel(job_id: str):
         job = _require_job(job_id)
         cancelled = job.cancel()
@@ -530,14 +487,12 @@ def create_app() -> Flask:
                                    else "This job has already finished."})
 
     @app.get("/video/<job_id>")
-    @local_only
     def serve_video(job_id: str):
         job = _require_job(job_id)
         path = _result_path(job, "video")
         return send_file(path, mimetype="video/mp4", conditional=True)
 
     @app.get("/download/<job_id>")
-    @local_only
     def download_video(job_id: str):
         job = _require_job(job_id)
         path = _result_path(job, "video")
@@ -546,7 +501,6 @@ def create_app() -> Flask:
                          download_name=filename, conditional=True)
 
     @app.get("/poster/<job_id>")
-    @local_only
     def serve_poster(job_id: str):
         job = _require_job(job_id)
         path = _result_path(job, "poster", required=False)
@@ -769,7 +723,11 @@ def _worker(app: Flask, job, payload: dict) -> None:
             job.skip_stage("music", "No background music")
         else:
             job.set_stage("music", "running", "Preparing music")
-            if payload["music_mode"] == "library":
+            if payload["music_mode"] == "builtin":
+                track = music.builtin_track(payload["music_id"])
+                music_path = music.builtin_path(track["id"])
+                music_name = track["name"]
+            elif payload["music_mode"] == "library":
                 track = music.get_track(payload["music_id"])
                 music_path = music.track_path(track.id)
                 music_name = track.name
@@ -793,12 +751,14 @@ def _worker(app: Flask, job, payload: dict) -> None:
             raise CancelledError()
         job.set_stage("render", "running", "Rendering video")
 
-        def progress(stage_id: str, detail: str) -> None:
+        def progress(stage_id: str, detail: str, fraction: float = 0.0) -> None:
+            # The renderer reports how much of its stage is done, so the bar
+            # keeps moving inside a long scene loop instead of sitting still.
             if stage_id == "verify":
                 job.complete_stage("render", "Video assembled")
-                job.set_stage("verify", "running", detail)
+                job.set_progress("verify", detail, fraction)
             else:
-                job.set_stage("render", "running", detail)
+                job.set_progress("render", detail, fraction)
 
         output = job.work_dir / "output" / f"{slugify(facts.name)}-promo.mp4"
         result = render_video(RenderRequest(
@@ -903,12 +863,5 @@ app = create_app()
 if __name__ == "__main__":
     host = os.environ.get("APP_HOST", "127.0.0.1")
     port = int(os.environ.get("APP_PORT", "5000"))
-    if host not in ALLOWED_LOCAL_ADDRESSES:
-        if AUTH_ENABLED:
-            print("\nHTTP Basic authentication is enabled for this deployment.")
-            print("Terminate HTTPS at a reverse proxy; do not serve this over plain HTTP.\n")
-        else:
-            print("\nWARNING: no APP_USERNAME/APP_PASSWORD set — remote clients are refused.")
-            print("Set both credentials before exposing the app beyond this computer.\n")
     print(f"\n  AI Property Video Generator → http://{host}:{port}\n")
     app.run(host=host, port=port, debug=False, threaded=True, use_reloader=False)

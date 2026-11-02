@@ -38,7 +38,7 @@ from services.validation import PropertyFacts
 
 log = get_logger("video")
 
-CANVAS = (3840, 2160)  # 2× the 1080p delivery size
+CANVAS = (2880, 1620)  # fallback canvas (1.5× the 1080p delivery size)
 INK = (9, 14, 24)
 ACCENT = (216, 166, 87)
 WHITE = (255, 255, 255, 255)
@@ -199,17 +199,30 @@ def _paste_scrim(base: Image.Image, corner: str, ratio: float, max_alpha: int) -
     base.paste(colour, (0, top), mask)
 
 
-def _new_overlay() -> Image.Image:
-    return Image.new("RGBA", CANVAS, (0, 0, 0, 0))
+def _new_overlay(canvas: tuple[int, int] = CANVAS) -> Image.Image:
+    return Image.new("RGBA", canvas, (0, 0, 0, 0))
 
 
-def compose_title(facts: PropertyFacts, script: dict, image_path: Path | None) -> SceneFrame:
-    width, height = CANVAS
-    background = _photo_layer(image_path, CANVAS, brightness=0.58)
+def canvas_for(width: int, height: int, scale: float = 1.5) -> tuple[int, int]:
+    """Working canvas used to compose each scene.
+
+    Slightly above the delivery size so the Ken Burns move has room to pan
+    without upscaling. It is deliberately not 4K: one 3840x2160 scene needs
+    roughly 80 MB across its layers, and holding eight of those is enough for
+    a 512 MB container to be killed mid-render.
+    """
+    scale = max(1.0, min(2.0, float(scale or 1.0)))
+    return int(round(int(width) * scale)), int(round(int(height) * scale))
+
+
+def compose_title(facts: PropertyFacts, script: dict, image_path: Path | None,
+                  canvas: tuple[int, int] = CANVAS) -> SceneFrame:
+    width, height = canvas
+    background = _photo_layer(image_path, canvas, brightness=0.58)
     _paste_scrim(background, "bottom", 0.78, 235)
     _paste_scrim(background, "top", 0.32, 150)
 
-    overlay = _new_overlay()
+    overlay = _new_overlay(canvas)
     draw = ImageDraw.Draw(overlay)
     margin = int(width * MARGIN_RATIO)
 
@@ -275,12 +288,12 @@ def compose_title(facts: PropertyFacts, script: dict, image_path: Path | None) -
 
 
 def compose_photo(facts: PropertyFacts, scene: Scene, position: int,
-                  total: int) -> SceneFrame:
-    width, height = CANVAS
-    background = _photo_layer(scene.image_path, CANVAS, brightness=0.94)
+                  total: int, canvas: tuple[int, int] = CANVAS) -> SceneFrame:
+    width, height = canvas
+    background = _photo_layer(scene.image_path, canvas, brightness=0.94)
     _paste_scrim(background, "bottom", 0.62, 238)
 
-    overlay = _new_overlay()
+    overlay = _new_overlay(canvas)
     draw = ImageDraw.Draw(overlay)
     margin = int(width * MARGIN_RATIO)
 
@@ -321,13 +334,14 @@ def compose_photo(facts: PropertyFacts, scene: Scene, position: int,
     return SceneFrame(background=background, overlay=overlay)
 
 
-def compose_cta(facts: PropertyFacts, script: dict, image_path: Path | None) -> SceneFrame:
-    width, height = CANVAS
-    background = _photo_layer(image_path, CANVAS, brightness=0.34)
+def compose_cta(facts: PropertyFacts, script: dict, image_path: Path | None,
+                canvas: tuple[int, int] = CANVAS) -> SceneFrame:
+    width, height = canvas
+    background = _photo_layer(image_path, canvas, brightness=0.34)
     _paste_scrim(background, "bottom", 1.0, 225)
     _paste_scrim(background, "top", 0.55, 190)
 
-    overlay = _new_overlay()
+    overlay = _new_overlay(canvas)
     draw = ImageDraw.Draw(overlay)
     margin = int(width * MARGIN_RATIO)
     max_width = width - 2 * margin
@@ -374,33 +388,48 @@ def compose_cta(facts: PropertyFacts, script: dict, image_path: Path | None) -> 
     return SceneFrame(background=background, overlay=overlay)
 
 
-def compose_scenes(timeline: Timeline, facts: PropertyFacts, script: dict, out_dir: Path,
-                   progress: Callable[[str, str], None] | None = None,
-                   should_cancel: Callable[[], bool] | None = None) -> list[dict]:
+def compose_scene(scene: Scene, timeline: Timeline, facts: PropertyFacts, script: dict,
+                  out_dir: Path, canvas: tuple[int, int] = CANVAS,
+                  poster_path: Path | None = None) -> tuple[Path, Path]:
+    """Render one scene's two layers to disk and return their paths.
+
+    Only one scene is held in memory at a time: the caller encodes it, deletes
+    the layers and moves on. This is what keeps peak memory flat (and low) no
+    matter how many photos the video has.
+    """
     out_dir.mkdir(parents=True, exist_ok=True)
     photos = timeline.photo_scenes
     total_photos = max(1, len(photos))
-    frames: list[dict] = []
+    if scene.kind == TITLE:
+        frame = compose_title(facts, script, scene.image_path, canvas)
+    elif scene.kind == CTA:
+        frame = compose_cta(facts, script, scene.image_path, canvas)
+    else:
+        frame = compose_photo(facts, scene, scene.index, total_photos, canvas)
 
-    for scene in timeline.scenes:
-        if should_cancel and should_cancel():
-            raise CancelledError()
-        if progress:
-            progress("render", f"Composing scene {scene.index + 1} of {len(timeline.scenes)}")
-        if scene.kind == TITLE:
-            frame = compose_title(facts, script, scene.image_path)
-        elif scene.kind == CTA:
-            frame = compose_cta(facts, script, scene.image_path)
-        else:
-            frame = compose_photo(facts, scene, scene.index, total_photos)
+    background = out_dir / f"scene_{scene.index:02d}_bg.jpg"
+    overlay = out_dir / f"scene_{scene.index:02d}_fg.png"
+    if poster_path is not None:
+        poster_path.parent.mkdir(parents=True, exist_ok=True)
+    # The background has no alpha, so JPEG is smaller and much faster to write;
+    # the overlay needs PNG but no compression, because it is deleted right after
+    # its clip is encoded.
+    frame.background.save(background, format="JPEG", quality=92)
+    frame.overlay.save(overlay, format="PNG", compress_level=1)
 
-        background = out_dir / f"scene_{scene.index:02d}_bg.png"
-        overlay = out_dir / f"scene_{scene.index:02d}_fg.png"
-        frame.background.save(background, format="PNG")
-        frame.overlay.save(overlay, format="PNG")
-        frames.append({"background": background, "overlay": overlay,
-                       "composite": frame.composite})
-    return frames
+    if poster_path is not None:
+        try:
+            composite = frame.composite
+            composite.resize((1280, 720), Image.LANCZOS).save(
+                poster_path, format="JPEG", quality=86
+            )
+            composite.close()
+        except Exception as exc:  # the poster is optional polish
+            log.warning("Poster generation skipped: %s", exc)
+
+    frame.background.close()
+    frame.overlay.close()
+    return background, overlay
 
 
 # --------------------------------------------------------------------------- #
@@ -432,7 +461,7 @@ def render_clip(background: Path, overlay: Path, duration: float, destination: P
         "-loop", "1", "-framerate", str(fps), "-i", str(overlay),
         "-filter_complex", graph, "-map", "[v]",
         "-frames:v", str(frames),
-        "-c:v", "libx264", "-preset", "veryfast", "-crf", "18",
+        "-c:v", "libx264", "-preset", "ultrafast", "-crf", "18",
         "-pix_fmt", "yuv420p", "-an", str(destination),
     ]
     result = ffmpeg_tools.run_cancellable(command, should_cancel=should_cancel, timeout=300)
@@ -477,7 +506,7 @@ def _mux(clips: list[Path], audio_wav: Path | None, output: Path, timeline: Time
         command += ["-map", f"{len(clips)}:a", "-c:a", "aac", "-b:a", "192k",
                     "-ar", "48000", "-ac", "2"]
     command += [
-        "-c:v", "libx264", "-preset", "medium", "-crf", "20", "-pix_fmt", "yuv420p",
+        "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p",
         "-r", str(timeline.fps), "-movflags", "+faststart",
         "-t", f"{total:.3f}", str(output),
     ]
@@ -544,7 +573,8 @@ class RenderRequest:
     music_volume: float = 0.30
     width: int | None = None
     height: int | None = None
-    progress: Callable[[str, str], None] | None = None
+    # progress(stage_id, detail, fraction_of_stage) — the third argument is optional
+    progress: Callable[..., None] | None = None
     should_cancel: Callable[[], bool] | None = None
     defaults: dict | None = None
 
@@ -581,29 +611,50 @@ def render_video(request: RenderRequest) -> dict:
     def cancelled() -> bool:
         return bool(request.should_cancel and request.should_cancel())
 
-    # 1) layers ------------------------------------------------------------ #
-    frames = compose_scenes(timeline, request.facts, request.script, scenes_dir,
-                            progress=request.progress,
-                            should_cancel=request.should_cancel)
-
-    # 2) clips ------------------------------------------------------------- #
+    # 1) compose + encode, one scene at a time ------------------------------ #
+    #    Layer files are deleted as soon as they are encoded, so peak memory is
+    #    one scene, not the whole video. Progress runs 1..N exactly once.
+    canvas = canvas_for(width, height, float(video_cfg.get("canvas_scale", 1.5)))
+    scenes_dir.mkdir(parents=True, exist_ok=True)
+    clips_dir.mkdir(parents=True, exist_ok=True)
+    poster_path = request.output_path.with_suffix(".jpg")
+    scene_count = max(1, len(timeline.scenes))
     clip_paths: list[Path] = []
-    for index, (scene, frame) in enumerate(zip(timeline.scenes, frames)):
+
+    for index, scene in enumerate(timeline.scenes):
+        if cancelled():
+            raise CancelledError()
+        motion = "in" if index == 0 else ("out" if index == len(timeline.scenes) - 1
+                                          else ("out" if index % 2 == 0 else "in"))
+        if request.progress:
+            request.progress("render", f"Scene {index + 1} of {scene_count} · composing",
+                             (index + 0.15) / scene_count)
+        background, overlay = compose_scene(
+            scene, timeline, request.facts, request.script, scenes_dir, canvas,
+            poster_path=poster_path if index == 0 else None,
+        )
+
         if cancelled():
             raise CancelledError()
         if request.progress:
-            request.progress("render",
-                             f"Rendering scene {index + 1} of {len(timeline.scenes)}")
-        motion = "in" if index == 0 else ("out" if index == len(timeline.scenes) - 1
-                                          else ("out" if index % 2 == 0 else "in"))
+            request.progress("render", f"Scene {index + 1} of {scene_count} · encoding",
+                             (index + 0.35) / scene_count)
         clip_paths.append(render_clip(
-            frame["background"], frame["overlay"], scene.duration,
+            background, overlay, scene.duration,
             clips_dir / f"clip_{index:02d}.mp4",
             width=width, height=height, fps=fps, motion=motion,
             should_cancel=request.should_cancel,
         ))
+        for layer in (background, overlay):
+            try:
+                layer.unlink(missing_ok=True)
+            except OSError:
+                pass
+        if request.progress:
+            request.progress("render", f"Scene {index + 1} of {scene_count} · done",
+                             (index + 1) / scene_count)
 
-    # 3) audio ------------------------------------------------------------- #
+    # 2) audio ------------------------------------------------------------- #
     narration_wav: Path | None = None
     if request.narration_clips and request.narration_durations:
         entries = [
@@ -620,7 +671,7 @@ def render_video(request: RenderRequest) -> dict:
     mixed_audio: Path | None = None
     if narration_wav or request.music_path:
         if request.progress:
-            request.progress("render", "Mixing audio")
+            request.progress("render", "Mixing audio", 0.98)
         mixed_audio = audio_tools.mix_tracks(
             narration_wav, request.music_path, audio_dir / "mix.wav", timeline.total,
             volume=float(request.music_volume),
@@ -632,28 +683,21 @@ def render_video(request: RenderRequest) -> dict:
             music_src=request.music_path,
         )
 
-    # 4) mux --------------------------------------------------------------- #
+    # 3) mux --------------------------------------------------------------- #
     if cancelled():
         raise CancelledError()
     if request.progress:
-        request.progress("render", "Assembling final MP4")
+        request.progress("render", "Assembling the final MP4", 0.99)
     request.output_path.parent.mkdir(parents=True, exist_ok=True)
     _mux(clip_paths, mixed_audio, request.output_path, timeline,
          should_cancel=request.should_cancel)
 
-    # 5) verify ------------------------------------------------------------ #
+    # 4) verify ------------------------------------------------------------ #
     if request.progress:
-        request.progress("verify", "Checking the MP4 plays")
+        request.progress("verify", "Checking the MP4 plays", 0.2)
     info = verify_output(request.output_path, timeline.total, width, height)
 
-    poster = request.output_path.with_suffix(".jpg")
-    try:
-        frames[0]["composite"].resize((1280, 720), Image.LANCZOS).save(
-            poster, format="JPEG", quality=86
-        )
-    except Exception as exc:  # poster is optional polish
-        log.warning("Poster generation skipped: %s", exc)
-        poster = Path("")
+    poster = poster_path if poster_path.is_file() else Path("")
 
     return {
         **info,

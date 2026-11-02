@@ -8,7 +8,8 @@ Two deliberate choices keep this reliable and testable:
 * Ducking uses ``sidechaincompress`` keyed on the narration, which follows the
   voice naturally (including pauses) rather than a hard-coded on/off envelope.
 
-No music is ever generated: every non-empty music path comes from a user file.
+Music always comes from a file: either one of the built-in soundtracks in
+``assets/bgm`` or a track the user supplied.
 """
 
 from __future__ import annotations

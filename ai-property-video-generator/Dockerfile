@@ -2,7 +2,6 @@
 #
 #   docker build -t property-video-studio .
 #   docker run -p 8000:8000 \
-#     -e APP_USERNAME=studio -e APP_PASSWORD='change-me' \
 #     -v apvg-config:/app/config \
 #     -v apvg-uploads:/app/uploads \
 #     -v apvg-music:/app/music_library \
@@ -10,6 +9,8 @@
 #     property-video-studio
 #
 # Serve HTTPS in front of this container (Caddy, nginx, Render, Fly, Railway...).
+# The studio has no login: anyone with the URL can create a video. Set PORT to
+# whatever your host routes to (Render and Railway inject it automatically).
 
 FROM python:3.12-slim
 
@@ -33,4 +34,4 @@ RUN mkdir -p uploads music_library generated_videos logs config
 
 # One process, several threads: the render lock and job store live in memory.
 EXPOSE 8000
-CMD ["waitress-serve", "--listen=0.0.0.0:8000", "--threads=4", "wsgi:app"]
+CMD ["sh", "-c", "waitress-serve --listen=0.0.0.0:${PORT:-8000} --threads=4 wsgi:app"]

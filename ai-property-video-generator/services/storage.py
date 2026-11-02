@@ -28,6 +28,7 @@ SAMPLE_DIR = BASE_DIR / "sample_data"
 LOG_DIR = BASE_DIR / "logs"
 STATIC_DIR = BASE_DIR / "static"
 TEMPLATE_DIR = BASE_DIR / "templates"
+BGM_DIR = BASE_DIR / "assets" / "bgm"
 
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
 AUDIO_EXTENSIONS = {".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac"}

@@ -1,0 +1,54 @@
+<div class="sheet">
+  <div class="sheet__head">
+    <h2>Default audio level</h2>
+    <p>The level a new film starts with. You can still change it per film in the studio.</p>
+  </div>
+
+  <div class="field">
+    <label for="default-music-volume">Background music volume
+      <span class="range-value" id="default-music-volume-label">{{ (settings.video.music_volume * 100) | round | int }}%</span>
+    </label>
+    <input type="range" id="default-music-volume" min="0" max="100" step="5"
+           value="{{ (settings.video.music_volume * 100) | round | int }}">
+    <p class="field__hint">
+      Music ducks automatically underneath narration, so 25–40% usually sounds balanced.
+      At 0% the film keeps narration only.
+    </p>
+  </div>
+
+  <div class="alert alert--info" style="margin-top:16px">
+    <div>
+      <strong>Automatic ducking is built in.</strong> When someone is speaking the score drops,
+      then returns in the pauses — no manual keyframes needed.
+    </div>
+  </div>
+</div>
+
+<div class="sheet">
+  <div class="sheet__head">
+    <h2>Studio scores</h2>
+    <p>Three original tracks ship with the studio and are free to use in every film.</p>
+    <span class="config-state" id="settings-music-count">Loading…</span>
+  </div>
+  <div class="track-list" id="settings-builtin-list">
+    <div class="empty-state">Loading the studio scores…</div>
+  </div>
+  <div class="note">
+    Your own uploads live in the music library, managed from the studio’s music step.
+    Only use music you own or are licensed to use.
+  </div>
+</div>
+
+<div class="sheet">
+  <div class="sheet__head">
+    <h2>Music library</h2>
+    <p>Tracks you have added to this server.</p>
+  </div>
+  <dl class="summary">
+    <div class="summary__row"><dt>Tracks</dt><dd id="settings-library-count">—</dd></div>
+    <div class="summary__row"><dt>Storage used</dt><dd id="settings-library-size">—</dd></div>
+  </dl>
+  <div class="btn-row" style="margin-top:16px">
+    <a class="btn btn--ghost btn--sm" href="/#studio">Manage in the studio</a>
+  </div>
+</div>

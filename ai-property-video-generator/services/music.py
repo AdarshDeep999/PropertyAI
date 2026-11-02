@@ -1,10 +1,11 @@
 """Background music library.
 
-Three modes are supported by the UI, and this module backs all of them:
+Four modes are supported by the UI, and this module backs all of them:
 
-* library track  -> ``add_to_library`` then reuse by id
-* single-video   -> ``save_temp_track`` (file is deleted with the job)
-* no music       -> nothing is called, and no replacement track is invented
+* built-in track -> ``builtin_path`` (files shipped in ``assets/bgm``)
+* library track   -> ``add_to_library`` then reuse by id
+* single-video    -> ``save_temp_track`` (file is deleted with the job)
+* no music        -> nothing is called, and no replacement track is invented
 
 Every audio file is decoded with FFmpeg before it is accepted, so a renamed
 ``.mp3`` that is actually text is rejected with a clear message.
@@ -21,16 +22,92 @@ from pathlib import Path
 from services import ffmpeg_tools
 from services.errors import MusicError, NotFoundError, ValidationError
 from services.logging_setup import get_logger
-from services.storage import AUDIO_EXTENSIONS, MUSIC_DIR, extension_of, human_size, new_id, safe_original_name
+from services.storage import (
+    AUDIO_EXTENSIONS,
+    BGM_DIR,
+    MUSIC_DIR,
+    extension_of,
+    human_size,
+    new_id,
+    safe_original_name,
+)
 
 log = get_logger("music")
 INDEX_PATH = MUSIC_DIR / "index.json"
 _LOCK = threading.RLock()
 
 RIGHTS_NOTICE = (
-    "Only upload music you have the right to use. The app does not provide or generate "
-    "background music, and you are responsible for licensing any track you add."
+    "The built-in soundtracks are original recordings made for this app and are free to "
+    "use in the videos you create. Only upload music you have the right to use."
 )
+
+# Shipped soundtracks. They are always available, even on a host with an empty
+# library, so a first-time visitor gets music without having to find a file.
+BUILTIN_TRACKS: list[dict] = [
+    {
+        "id": "morning-light",
+        "name": "Morning Light",
+        "mood": "Warm · piano and strings",
+        "description": "Gentle and welcoming — a safe default for family homes.",
+        "file": "morning-light.m4a",
+        "duration": 48.0,
+    },
+    {
+        "id": "golden-hour",
+        "name": "Golden Hour",
+        "mood": "Calm · cinematic pads",
+        "description": "Slow and premium, with room for the narration to lead.",
+        "file": "golden-hour.m4a",
+        "duration": 48.0,
+    },
+    {
+        "id": "fresh-start",
+        "name": "Fresh Start",
+        "mood": "Bright · optimistic",
+        "description": "A little more energy for new listings and open houses.",
+        "file": "fresh-start.m4a",
+        "duration": 48.0,
+    },
+]
+
+
+def builtin_tracks() -> list[dict]:
+    """Public records for the soundtracks shipped with the app."""
+    tracks = []
+    for item in BUILTIN_TRACKS:
+        if not (BGM_DIR / item["file"]).is_file():
+            continue
+        tracks.append({
+            "id": item["id"],
+            "name": item["name"],
+            "display_name": item["name"],
+            "mood": item["mood"],
+            "description": item["description"],
+            "duration": item["duration"],
+            "duration_label": _duration_label(item["duration"]),
+            "audio_url": f"/media/bgm/{item['id']}",
+            "builtin": True,
+        })
+    return tracks
+
+
+def builtin_path(track_id: str) -> Path:
+    for item in BUILTIN_TRACKS:
+        if item["id"] == track_id:
+            path = BGM_DIR / item["file"]
+            if path.is_file():
+                return path
+            raise NotFoundError("That soundtrack is missing from this installation.")
+    raise NotFoundError("That soundtrack does not exist.")
+
+
+def builtin_track(track_id: str) -> dict:
+    """Registry entry for a shipped soundtrack, validating that it exists."""
+    builtin_path(track_id)
+    for item in BUILTIN_TRACKS:
+        if item["id"] == track_id:
+            return dict(item)
+    raise NotFoundError("That soundtrack does not exist.")
 
 
 @dataclasses.dataclass

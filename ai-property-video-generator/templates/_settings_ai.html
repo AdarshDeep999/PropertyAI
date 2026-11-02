@@ -1,0 +1,89 @@
+<div class="sheet">
+  <div class="sheet__head">
+    <h2>Script engine</h2>
+    <p>Used once per film to write the captions and narration. Without a key the built-in template writer takes over.</p>
+  </div>
+
+  <div class="grid grid--2">
+    <div class="field">
+      <label for="llm-provider">Provider</label>
+      <select id="llm-provider">
+        {% for pid, provider in catalog.llm.items() %}
+          <option value="{{ pid }}" {{ 'selected' if settings.llm.provider == pid else '' }}>{{ provider.label }}</option>
+        {% endfor %}
+      </select>
+      <p class="field__hint" id="llm-provider-note"></p>
+    </div>
+    <div class="field">
+      <label for="llm-model">Model</label>
+      <input type="text" id="llm-model" list="llm-model-options" value="{{ settings.llm.model }}">
+      <datalist id="llm-model-options"></datalist>
+      <p class="field__hint">Use a model your key can access.</p>
+    </div>
+  </div>
+
+  <div class="reveal-block" id="llm-base-url-wrap" style="margin-top:15px">
+    <div class="field">
+      <label for="llm-base-url">Base URL</label>
+      <input type="text" id="llm-base-url" value="{{ settings.llm.base_url }}"
+             placeholder="https://api.openai.com/v1">
+      <p class="field__hint">
+        Required for OpenAI-compatible servers. Local Ollama uses
+        <code>http://localhost:11434/v1</code> and needs no key.
+      </p>
+    </div>
+    <div class="grid grid--3 grid--tight" style="margin-top:12px" id="llm-presets"></div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="sheet__head" style="margin-bottom:12px">
+    <h3>API key</h3>
+    <p id="llm-key-help">Stored on the server, shown only as a mask, never sent to the browser.</p>
+    <span class="config-state" id="llm-config-state">Missing key</span>
+  </div>
+
+  <div class="key-row">
+    <input type="password" id="llm-key" autocomplete="off" spellcheck="false"
+           placeholder="Paste a key to save it on the server">
+    <button type="button" class="btn btn--primary btn--sm" id="llm-save-key">Save key</button>
+    <button type="button" class="btn btn--danger btn--sm" id="llm-remove-key">Remove</button>
+  </div>
+  <p class="status-line" id="llm-key-status" data-secret="gemini"></p>
+
+  <div class="btn-row" style="margin-top:14px">
+    <button type="button" class="btn btn--ghost btn--sm" id="llm-test">Test connection</button>
+    <span class="test-out" id="llm-test-result"></span>
+  </div>
+
+  <details class="advanced">
+    <summary>Advanced</summary>
+    <div class="advanced__body">
+      <p class="field__hint" style="margin:0">
+        Keys live in a restricted server-side file (DPAPI-encrypted on Windows). They are never
+        included in a page, an API response, or a log line.
+      </p>
+      <p class="field__hint" style="margin:0">
+        A key supplied through the server environment is read-only here — change it in your
+        <code>.env</code> and restart the app.
+      </p>
+    </div>
+  </details>
+</div>
+
+<div class="sheet">
+  <div class="sheet__head">
+    <h2>Script generation mode</h2>
+    <p>Template mode is always available, never calls an API and never bills you.</p>
+  </div>
+  <label class="check">
+    <input type="checkbox" id="force-template" {{ 'checked' if settings.llm.force_template else '' }}>
+    <span><strong>Always use the built-in template script.</strong> Deterministic wording, no API request, nothing charged.</span>
+  </label>
+  <div class="alert alert--info" style="margin-top:14px">
+    <div>
+      Whichever mode you pick, the script is checked against the facts you entered — the film
+      cannot invent a price, a bedroom count or a feature.
+    </div>
+  </div>
+</div>

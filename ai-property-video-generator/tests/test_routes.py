@@ -165,9 +165,19 @@ def test_secret_save_and_delete(client, csrf_headers):
     assert removed.get_json()["secret"]["configured"] is False
 
 
-def test_local_only_guard(client):
+def test_app_is_public_for_remote_clients(client):
+    """The studio ships without a login, so a remote address is served normally."""
     response = client.get("/api/settings", environ_base={"REMOTE_ADDR": "10.1.2.3"})
-    assert response.status_code == 403
+    assert response.status_code == 200
+
+
+def test_ping_is_a_cheap_keep_alive_target(client):
+    response = client.get("/ping", environ_base={"REMOTE_ADDR": "203.0.113.9"})
+    assert response.status_code == 200
+    payload = response.get_json()
+    assert payload["status"] == "ok"
+    # A cron only needs a 200; it must not touch FFmpeg or the settings file.
+    assert "checks" not in payload
 
 
 # --------------------------------------------------------------------------- #
@@ -358,28 +368,22 @@ def test_corrupt_music_upload_is_rejected(client, csrf_headers, tmp_path, monkey
     assert response.get_json()["error"]["code"] == "invalid_music"
 
 
-def test_basic_auth_gate_when_deployment_credentials_are_set(monkeypatch):
-    import base64
-
-    monkeypatch.setattr(app_module, "AUTH_ENABLED", True)
-    monkeypatch.setattr(app_module, "APP_USERNAME", "studio")
-    monkeypatch.setattr(app_module, "APP_PASSWORD", "s3cret-pass")
-    client = app_module.create_app().test_client()
-
-    denied = client.get("/")
-    assert denied.status_code == 401
-    assert denied.headers["WWW-Authenticate"].startswith("Basic")
-
-    good = base64.b64encode(b"studio:s3cret-pass").decode()
-    assert client.get("/", headers={"Authorization": f"Basic {good}"}).status_code == 200
-
-    bad = base64.b64encode(b"studio:wrong").decode()
-    assert client.get("/", headers={"Authorization": f"Basic {bad}"}).status_code == 401
+def test_music_endpoint_offers_builtin_soundtracks(client):
+    payload = client.get("/api/music").get_json()
+    assert isinstance(payload["builtin"], list)
+    assert payload["builtin"], "the shipped soundtracks should always be listed"
+    first = payload["builtin"][0]
+    assert first["id"] and first["audio_url"].startswith("/media/bgm/")
 
 
-def test_remote_clients_are_refused_without_credentials():
-    client = app_module.create_app().test_client()
-    response = client.get("/api/health",
-                          environ_overrides={"REMOTE_ADDR": "203.0.113.9"})
-    assert response.status_code == 403
-    assert response.get_json()["error"]["code"] == "forbidden"
+def test_generate_accepts_a_builtin_soundtrack(client, csrf_headers, fake_render,
+                                              fake_tts, make_images):
+    response = client.post("/api/generate",
+                           data=_image_form(make_images(4), music_mode="builtin",
+                                            music_id="morning-light"),
+                           headers=csrf_headers, content_type="multipart/form-data")
+    assert response.status_code == 202
+    job = _wait_for_job(client, response.get_json()["job"]["id"])
+    assert job["status"] == "done"
+    assert job["result"]["music_used"] is True
+    assert job["result"]["music_name"] == "Morning Light"

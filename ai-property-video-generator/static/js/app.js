@@ -18,16 +18,24 @@
     job: null,
     timer: null,
     busy: false,
-    musicMode: "none",
+    musicMode: "builtin",
     trackId: null,
+    builtinId: "morning-light",
+    builtin: [],
+    startedAt: null,
+    elapsedTimer: null,
     dragId: null,
   };
+
+  const SESSION_KEY = "pvs.session.v1";
+  const JOB_KEY = "pvs.job.v1";
 
   if (!document.getElementById("property-form")) return; // not the generator page
 
   /* ------------------------------------------------------------------ tabs */
-  function setTab(name) {
+  function setTab(name, scroll) {
     state.tab = name;
+    document.body.dataset.step = name;
     document.querySelectorAll(".step").forEach((button) => {
       button.setAttribute("aria-selected", button.dataset.tab === name ? "true" : "false");
     });
@@ -35,9 +43,22 @@
       panel.classList.toggle("is-active", panel.id === "panel-" + name);
     });
     const index = TABS.indexOf(name);
+    const fill = $("stepper-fill");
+    if (fill) fill.style.width = (100 * Math.max(0, index) / (TABS.length - 1)) + "%";
+    // Progress and Preview carry their own actions; the floating bar would sit
+    // on top of the player and the download button.
+    const actionBar = document.querySelector(".action-bar");
+    if (actionBar) actionBar.hidden = name === "progress" || name === "result";
     $("btn-prev").disabled = index <= 0;
     $("btn-next").disabled = index >= LAST_FORM_TAB;
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (scroll === false) return;
+    // Bring the step controls to the top rather than the hero: the panel the
+    // user just asked for should be what they see.
+    const stepper = document.querySelector(".stepper");
+    const top = stepper
+      ? stepper.getBoundingClientRect().top + window.scrollY - 74
+      : 0;
+    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
   }
 
   document.querySelectorAll(".step").forEach((button) => {
@@ -112,12 +133,84 @@
     return { ok: Object.keys(errors).length === 0, errors, values };
   }
 
+  /* ------------------------------------------------------------- summary rail */
+  function setSummary(nodeId, value, emptyLabel) {
+    const node = $(nodeId);
+    if (!node) return;
+    node.textContent = value || emptyLabel;
+    node.classList.toggle("is-empty", !value);
+  }
+
+  function voiceLabel() {
+    const engineSelect = $("gen-tts-engine");
+    const voiceSelect = $("gen-tts-voice");
+    if (!engineSelect) return "";
+    const engine = (catalog.tts || {})[engineSelect.value] || {};
+    const voice = voiceSelect && voiceSelect.selectedOptions[0]
+      ? voiceSelect.selectedOptions[0].textContent.split(" — ")[0]
+      : "";
+    const engineName = (engine.label || "").split(" (")[0];
+    if (!engineName) return voice;
+    return voice ? engineName.split(" neural")[0] + " · " + voice : engineName;
+  }
+
+  function updateSummary() {
+    const values = formValues();
+    const count = state.files.length;
+    setSummary("sum-property", values.name, "Not set");
+    setSummary("sum-photos", count ? count + " of " + limits.max_images : "", "None yet");
+    setSummary("sum-script", state.script
+      ? (state.script.source === "ai" ? "AI written" : "Template written")
+      : "", "Not written");
+    setSummary("sum-voice", $("enable-narration") && !$("enable-narration").checked
+      ? "Off" : voiceLabel(), "Pending");
+
+    let music = "";
+    if (state.musicMode === "none") music = "No music";
+    else if (state.musicMode === "builtin") {
+      const track = (state.builtin || []).find((item) => item.id === state.builtinId);
+      music = track ? track.name : "Studio score";
+    } else if (state.musicMode === "library") {
+      music = state.trackId ? "From library" : "";
+    } else if (state.musicMode === "upload") {
+      const file = $("music-file") && $("music-file").files[0];
+      music = file ? file.name : "";
+    }
+    setSummary("sum-music", music, "Not chosen");
+
+    const photoChip = $("photo-count-chip");
+    if (photoChip) photoChip.textContent = count + " / " + limits.max_images;
+    const scriptChip = $("script-source-chip");
+    if (scriptChip) {
+      scriptChip.textContent = state.script
+        ? (state.script.source === "ai" ? "AI script" : "Template script")
+        : (boot.has_llm_key ? "AI ready" : "Template ready");
+    }
+
+    const finished = Boolean(state.job && state.job.status === "done" && state.job.result);
+    const complete = {
+      details: Boolean(values.name) && Boolean(values.location),
+      images: count >= limits.min_images && count <= limits.max_images,
+      script: Boolean(state.script),
+      music: state.musicMode === "none" ||
+        (state.musicMode === "builtin" && Boolean(state.builtinId)) ||
+        (state.musicMode === "library" && Boolean(state.trackId)) ||
+        (state.musicMode === "upload" && Boolean($("music-file") && $("music-file").files.length)),
+      progress: finished,
+      result: finished,
+    };
+    document.querySelectorAll(".step").forEach((button) => {
+      button.classList.toggle("is-complete", Boolean(complete[button.dataset.tab]));
+    });
+  }
+
   function updateReadiness() {
     const values = formValues();
     const ready = Boolean(values.name) && Boolean(values.location) &&
       state.files.length >= limits.min_images && state.files.length <= limits.max_images;
     const button = $("generate-btn");
     button.disabled = !ready || state.busy;
+    const couldRender = ready && !state.busy;
     const note = $("readiness");
     const showingFinishedVideo = state.tab === "result" && state.job &&
       state.job.status === "done" && state.job.result;
@@ -135,6 +228,19 @@
       note.textContent = "Ready to generate · " + state.files.length + " photos · " +
         (boot.has_llm_key ? "AI script available" : "template script mode");
     }
+
+    const sideNote = $("readiness-side");
+    if (sideNote) {
+      sideNote.textContent = state.busy
+        ? "A film is rendering — watch the render step."
+        : showingFinishedVideo
+          ? "Your film is ready — open the preview to watch or download it."
+          : couldRender
+          ? "Everything is in place. Press Generate video when the cut feels right."
+          : "Add a name, a location and " + limits.min_images +
+            " photos to unlock the render.";
+    }
+    updateSummary();
   }
 
   ["field-name", "field-location", "field-price", "field-bedrooms", "field-type",
@@ -144,6 +250,7 @@
     node.addEventListener("input", () => {
       updateReadiness();
       clearScript(); // facts may have changed: never render a stale script
+      saveSession();
     });
     node.addEventListener("blur", () => {
       const values = formValues();
@@ -151,6 +258,84 @@
       if (id === "field-location") setFieldError("location", values.location.length >= 2 ? "" : "Enter the location.");
     });
   });
+
+  /* --------------------------------------------------------------- session */
+  function saveSession() {
+    const payload = {
+      fields: formValues(),
+      music: {
+        mode: state.musicMode,
+        builtinId: state.builtinId,
+        trackId: state.trackId,
+        volume: $("music-volume") ? $("music-volume").value : "30",
+      },
+      narration: $("enable-narration") ? $("enable-narration").checked : true,
+      script: state.script ? { data: state.script.data, source: state.script.source } : null,
+      force_template: $("force-template-field") ? $("force-template-field").value : "0",
+      saved_at: Date.now(),
+    };
+    try { localStorage.setItem(SESSION_KEY, JSON.stringify(payload)); } catch (error) { /* private mode */ }
+  }
+
+  function restoreSession() {
+    let payload = null;
+    try { payload = JSON.parse(localStorage.getItem(SESSION_KEY) || "null"); } catch (error) { payload = null; }
+    if (!payload || typeof payload !== "object") return;
+
+    const fields = payload.fields || {};
+    const targets = {
+      name: "field-name", location: "field-location", price: "field-price",
+      property_type: "field-type", bedrooms: "field-bedrooms",
+      features: "field-features", contact: "field-contact", description: "field-description",
+    };
+    Object.entries(targets).forEach(([key, id]) => {
+      const node = $(id);
+      if (node && fields[key] != null) node.value = fields[key];
+    });
+    if (fields.tone && $("tone")) $("tone").value = fields.tone;
+    if (payload.narration === false && $("enable-narration")) $("enable-narration").checked = false;
+
+    const music = payload.music || {};
+    if (music.volume != null && $("music-volume")) {
+      $("music-volume").value = music.volume;
+      $("music-volume-label").textContent = music.volume + "%";
+    }
+    if (music.builtinId) state.builtinId = music.builtinId;
+    if (music.trackId) state.trackId = music.trackId;
+    state.musicMode = music.mode || "builtin";
+
+    if (payload.script && payload.script.data) {
+      state.script = { data: payload.script.data, source: payload.script.source || "template" };
+      $("script-json").value = JSON.stringify(payload.script.data);
+      $("force-template-field").value = payload.force_template || "0";
+      renderScript(state.script, null);
+    }
+  }
+
+  async function restoreJob() {
+    let jobId = null;
+    try { jobId = localStorage.getItem(JOB_KEY); } catch (error) { jobId = null; }
+    if (!jobId) return;
+    try {
+      const job = await api("/api/jobs/" + encodeURIComponent(jobId));
+      state.job = job;
+      if (job.status === "done") {
+        showResult(job);
+      } else if (job.status === "queued" || job.status === "running") {
+        state.busy = true;
+        state.startedAt = Date.parse(job.created_at) || Date.now();
+        setTab("progress");
+        renderJob(job);
+        startElapsed();
+        startPolling();
+        toast("Your render is still running — picking it back up.", "ok");
+      } else {
+        forgetJob();
+      }
+    } catch (error) {
+      forgetJob();
+    }
+  }
 
   /* ---------------------------------------------------------------- images */
   function addFiles(fileList) {
@@ -292,6 +477,7 @@
     $("script-json").value = "";
     $("script-card").hidden = true;
     $("script-status").innerHTML = "";
+    updateSummary();
   }
 
   function scriptStatus(kind, message, extra) {
@@ -335,6 +521,7 @@
       scriptStatus("warn", "Built-in template script used.",
         result.fallback_reason || "No AI provider was available.");
     }
+    updateSummary();
   }
 
   async function generateScript(forceTemplate) {
@@ -422,13 +609,16 @@
     engineSelect.addEventListener("change", () => {
       fillGeneratorVoices();
       persist({ engine: engineSelect.value, voice: $("gen-tts-voice").value });
+      updateSummary();
     });
     $("gen-tts-voice").addEventListener("change", () => {
       persist({ engine: engineSelect.value, voice: $("gen-tts-voice").value });
+      updateSummary();
     });
 
     $("enable-narration").addEventListener("change", () => {
       $("narration-options").style.opacity = $("enable-narration").checked ? "1" : ".5";
+      updateSummary();
     });
   }
 
@@ -491,14 +681,113 @@
       const radio = choice.querySelector("input");
       if (radio) radio.checked = selected;
     });
+    $("music-builtin-wrap").hidden = mode !== "builtin";
     $("music-library-wrap").hidden = mode !== "library";
     $("music-upload-wrap").hidden = mode !== "upload";
     if (mode === "library") loadLibrary();
+    if (mode === "builtin") ensureBuiltinLoaded();
+    saveSession();
+    updateSummary();
   }
 
   musicRadios.forEach((radio) => {
     radio.addEventListener("change", () => setMusicMode(radio.value));
   });
+
+  function bars(seed) {
+    let html = "";
+    for (let index = 0; index < 20; index += 1) {
+      const height = 24 + ((index * 37 + seed * 13) % 66);
+      html += '<span style="height:' + height + '%"></span>';
+    }
+    return html;
+  }
+
+  function renderBuiltin(tracks) {
+    const list = $("builtin-list");
+    if (!list) return;
+    state.builtin = tracks || [];
+    if (!state.builtin.length) {
+      list.innerHTML = '<div class="empty-state">No soundtracks in this install — upload a track instead.</div>';
+      return;
+    }
+    list.innerHTML = state.builtin.map((track) => (
+      '<div class="sound" data-sound="' + escapeHtml(track.id) + '" role="button" tabindex="0" aria-pressed="false">' +
+        '<div class="sound__head"><span class="sound__name">' + escapeHtml(track.name) + "</span>" +
+          '<span class="sound__check">✓</span></div>' +
+        '<span class="sound__mood">' + escapeHtml(track.mood) + " · " +
+          escapeHtml(track.duration_label) + "</span>" +
+        '<span class="sound__desc">' + escapeHtml(track.description) + "</span>" +
+        '<span class="sound__bar" aria-hidden="true">' + bars(track.name.length) + "</span>" +
+        '<button type="button" class="sound__play" data-preview aria-label="Preview ' +
+          escapeHtml(track.name) + '">▶</button>' +
+        '<audio preload="none" src="' + escapeHtml(track.audio_url) + '"></audio>' +
+      "</div>"
+    )).join("");
+
+    const cards = list.querySelectorAll(".sound");
+    cards.forEach((card) => {
+      const id = card.dataset.sound;
+      const audio = card.querySelector("audio");
+      const playButton = card.querySelector("[data-preview]");
+      const choose = () => selectBuiltin(id);
+      card.addEventListener("click", choose);
+      card.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") { event.preventDefault(); choose(); }
+      });
+      playButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        if (audio.paused) {
+          cards.forEach((other) => {
+            if (other === card) return;
+            const otherAudio = other.querySelector("audio");
+            if (otherAudio) { otherAudio.pause(); otherAudio.currentTime = 0; }
+          });
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+        } else {
+          audio.pause();
+        }
+      });
+      audio.addEventListener("play", () => {
+        card.classList.add("is-playing");
+        playButton.textContent = "❚❚";
+      });
+      const stop = () => {
+        card.classList.remove("is-playing");
+        playButton.textContent = "▶";
+      };
+      audio.addEventListener("pause", stop);
+      audio.addEventListener("ended", stop);
+    });
+    selectBuiltin(state.builtinId || state.builtin[0].id);
+  }
+
+  function selectBuiltin(id) {
+    state.builtinId = id;
+    $("music-id").value = id;
+    document.querySelectorAll(".sound").forEach((card) => {
+      const on = card.dataset.sound === id;
+      card.classList.toggle("is-selected", on);
+      card.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    saveSession();
+    updateSummary();
+  }
+
+  let builtinPromise = null;
+  function ensureBuiltinLoaded() {
+    if (builtinPromise) return builtinPromise;
+    builtinPromise = api("/api/music").then((data) => {
+      renderBuiltin(data.builtin || []);
+      return data;
+    }).catch(() => {
+      builtinPromise = null;
+      $("builtin-list").innerHTML =
+        '<div class="alert alert--error"><div>Soundtracks could not be loaded — you can still upload a track.</div></div>';
+    });
+    return builtinPromise;
+  }
 
   async function loadLibrary() {
     const list = $("music-library");
@@ -536,6 +825,7 @@
         row.querySelector('input[type="radio"]').addEventListener("change", () => {
           state.trackId = trackId;
           $("music-id").value = trackId;
+          updateSummary();
         });
         row.querySelector("[data-delete]").addEventListener("click", async () => {
           if (!window.confirm("Remove this track from the library?")) return;
@@ -557,7 +847,11 @@
   const volume = $("music-volume");
   volume.addEventListener("input", () => {
     $("music-volume-label").textContent = volume.value + "%";
+    saveSession();
   });
+
+  const musicFileInput = $("music-file");
+  if (musicFileInput) musicFileInput.addEventListener("change", updateSummary);
 
   /* ------------------------------------------------------------ generation */
   async function startGeneration() {
@@ -577,6 +871,11 @@
       setTab("music");
       return;
     }
+    if (state.musicMode === "builtin" && !state.builtinId) {
+      toast("Choose a soundtrack, or switch music off.", "error");
+      setTab("music");
+      return;
+    }
     if (state.musicMode === "upload" && !$("music-file").files.length) {
       toast("Choose a music file, or switch music off.", "error");
       setTab("music");
@@ -587,6 +886,7 @@
     Object.entries(validation.values).forEach(([key, value]) => form.append(key, value || ""));
     state.files.forEach((entry) => form.append("images", entry.file, entry.file.name));
     form.append("music_mode", state.musicMode);
+    if (state.musicMode === "builtin" && state.builtinId) form.append("music_id", state.builtinId);
     if (state.musicMode === "library" && state.trackId) form.append("music_id", state.trackId);
     if (state.musicMode === "upload") {
       const file = $("music-file").files[0];
@@ -599,6 +899,7 @@
     if ($("force-template-field").value === "1") form.append("force_template", "1");
 
     state.busy = true;
+    state.startedAt = null;
     updateReadiness();
     $("generate-btn").disabled = true;
     setTab("progress");
@@ -618,9 +919,13 @@
         throw Object.assign(new Error(payload.message), payload);
       }
       state.job = data.job;
+      rememberJob(data.job.id);
+      state.startedAt = Date.now();
+      startElapsed();
       startPolling();
     } catch (error) {
       state.busy = false;
+      stopElapsed();
       updateReadiness();
       const node = $("job-error");
       node.hidden = false;
@@ -654,13 +959,23 @@
     $("progress-fill").style.width = percent + "%";
     $("progress-percent").textContent = percent + "%";
 
+    const phase = $("job-phase");
+    if (phase) {
+      const running = (job.stages || []).find((stage) => stage.status === "running");
+      const settled = { done: "Finished", failed: "Stopped", cancelled: "Cancelled" };
+      phase.textContent = running
+        ? (running.detail || running.label)
+        : (settled[job.status] || "Working…");
+    }
+
     $("stages").innerHTML = (job.stages || []).map((stage, index) => (
       '<li class="stage" data-status="' + escapeHtml(stage.status) + '">' +
         '<span class="stage__mark">' + glyph(stage.status, index) + "</span>" +
         '<span><span class="stage__label">' + escapeHtml(stage.label) + "</span>" +
           (stage.detail ? '<span class="stage__detail"> — ' + escapeHtml(stage.detail) + "</span>" : "") +
         "</span>" +
-        '<span class="small muted">' + escapeHtml(stage.status) + "</span>" +
+        '<span class="small muted">' +
+          escapeHtml(stage.status.charAt(0).toUpperCase() + stage.status.slice(1)) + "</span>" +
       "</li>"
     )).join("");
 
@@ -700,29 +1015,89 @@
 
   function startPolling() {
     if (state.timer) clearInterval(state.timer);
+    let misses = 0;
     const tick = async () => {
       if (!state.job) return;
       try {
         const job = await api("/api/jobs/" + state.job.id);
+        misses = 0;
         state.job = job;
         renderJob(job);
         if (["done", "failed", "cancelled"].includes(job.status)) {
           clearInterval(state.timer);
           state.timer = null;
           state.busy = false;
+          stopElapsed();
           updateReadiness();
           if (job.status === "done") showResult(job);
         }
       } catch (error) {
+        // A free host can restart mid-render, which surfaces as a 502. Keep
+        // trying for a while before declaring the job lost: the page should
+        // survive a hiccup instead of dumping the user back to step one.
+        if (error.status === 404) {
+          clearInterval(state.timer);
+          state.timer = null;
+          state.busy = false;
+          stopElapsed();
+          forgetJob();
+          updateReadiness();
+          const node = $("job-error");
+          node.hidden = false;
+          node.innerHTML = "<div><strong>This render was interrupted.</strong> " +
+            "The server restarted before it finished, so the video was not saved. " +
+            "Your details are kept — re-add the photos if they are no longer listed, " +
+            "then press <em>Try again</em>.</div>";
+          $("retry-generate").hidden = false;
+          $("job-status-badge").textContent = "Interrupted";
+          return;
+        }
+        misses += 1;
+        if (misses <= 40) {
+          $("job-phase").textContent = "Reconnecting to the server… (" + error.message + ")";
+          return;
+        }
         clearInterval(state.timer);
         state.timer = null;
         state.busy = false;
+        stopElapsed();
         updateReadiness();
-        toast("Lost contact with the render job: " + error.message, "error");
+        const node = $("job-error");
+        node.hidden = false;
+        node.innerHTML = "<div><strong>Lost contact with the server.</strong> " +
+          escapeHtml(error.message) + "<br>Your video may still be rendering — reload " +
+          "this page in a minute to check.</div>";
+        $("retry-generate").hidden = false;
       }
     };
     state.timer = setInterval(tick, 900);
     tick();
+  }
+
+  function rememberJob(id) {
+    try { localStorage.setItem(JOB_KEY, id); } catch (error) { /* private mode */ }
+  }
+
+  function forgetJob() {
+    try { localStorage.removeItem(JOB_KEY); } catch (error) { /* private mode */ }
+  }
+
+  function startElapsed() {
+    stopElapsed();
+    if (!state.startedAt) state.startedAt = Date.now();
+    const paint = () => {
+      const node = $("job-elapsed");
+      if (!node) return;
+      const seconds = Math.max(0, Math.round((Date.now() - state.startedAt) / 1000));
+      node.textContent = Math.floor(seconds / 60) + ":" + String(seconds % 60).padStart(2, "0");
+    };
+    paint();
+    state.elapsedTimer = setInterval(paint, 1000);
+  }
+
+  function stopElapsed() {
+    if (state.elapsedTimer) clearInterval(state.elapsedTimer);
+    state.elapsedTimer = null;
   }
 
   $("cancel-job").addEventListener("click", async () => {
@@ -745,6 +1120,7 @@
   function showResult(job) {
     const result = job.result;
     if (!result) return;
+    stopElapsed();
     $("result-empty").hidden = true;
     $("result-ready").hidden = false;
 
@@ -763,7 +1139,7 @@
       ["Resolution", result.resolution],
       ["File size", result.size_label],
       ["Script", script.source === "ai"
-        ? "AI · " + (script.provider || "") + " " + (script.model || "")
+        ? "AI · " + (script.model || script.provider || "")
         : "Template"],
       ["Narration", narration
         ? narration.engine_label + (narration.fallback_used ? " (fallback)" : "")
@@ -819,6 +1195,8 @@
     renderThumbs();
     updateReadiness();
     setMusicMode("none");
+    forgetJob();
+    try { localStorage.removeItem(SESSION_KEY); } catch (error) { /* private mode */ }
     setTab("details");
   });
 
@@ -855,9 +1233,13 @@
       try {
         const data = await api("/api/demo", { method: "POST" });
         state.job = data.job;
+        rememberJob(data.job.id);
+        state.startedAt = Date.now();
+        startElapsed();
         startPolling();
       } catch (error) {
         state.busy = false;
+        stopElapsed();
         toast(error.message, "error");
       } finally {
         demoButton.disabled = false;
@@ -867,7 +1249,15 @@
 
   /* ------------------------------------------------------------------ init */
   initNarration();
+  restoreSession();
+  setMusicMode(state.musicMode);
+  if ($("tone")) $("tone").addEventListener("change", saveSession);
+  if ($("enable-narration")) $("enable-narration").addEventListener("change", saveSession);
   renderThumbs();
   updateReadiness();
-  setTab("details");
+  // #step-photos (and friends) opens the studio on that step — useful after a
+  // refresh or when the URL is shared between agents.
+  const requested = (window.location.hash || "").replace("#step-", "");
+  setTab(TABS.includes(requested) ? requested : "details", false);
+  restoreJob();
 })();

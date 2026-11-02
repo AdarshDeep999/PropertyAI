@@ -1,0 +1,48 @@
+<div class="sheet">
+  <div class="sheet__head">
+    <h2>Application preferences</h2>
+    <p>Small defaults that follow you into every new film.</p>
+  </div>
+
+  <div class="grid grid--2">
+    <div class="field">
+      <label for="default-tone">Default script tone</label>
+      <select id="default-tone">
+        <option value="warm" {{ 'selected' if settings.video.tone == 'warm' else '' }}>Warm and welcoming</option>
+        <option value="premium" {{ 'selected' if settings.video.tone == 'premium' else '' }}>Premium and restrained</option>
+        <option value="concise" {{ 'selected' if settings.video.tone == 'concise' else '' }}>Concise and factual</option>
+      </select>
+      <p class="field__hint">Preselected in the script step. You can change it per film.</p>
+    </div>
+    <div class="field">
+      <span class="field__label">Film format</span>
+      <p class="field__hint" style="margin-top:4px">
+        1920 × 1080 · 16:9 · 30 fps MP4 — fixed for consistent listing quality.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="sheet">
+  <div class="sheet__head">
+    <h2>System health</h2>
+    <p>Checks the local rendering tools this studio depends on.</p>
+    <button type="button" class="btn btn--ghost btn--sm" id="health-refresh" style="margin-left:auto">Re-check</button>
+  </div>
+  <div class="track-list" id="health-list">
+    <div class="empty-state">Running checks…</div>
+  </div>
+</div>
+
+<div class="sheet">
+  <div class="sheet__head">
+    <h2>Privacy and storage</h2>
+  </div>
+  <div class="settings__aside-card" style="background:none;border:0;padding:0">
+    <ul>
+      <li><strong>Keys</strong> live in a restricted server-side file, shown only as a mask and never sent to the browser or written to a log.</li>
+      <li><strong>Photos and videos</strong> are processed on this server and are not uploaded to a third party — unless narration or a script uses the provider you configured.</li>
+      <li><strong>This studio is public by default.</strong> Anyone with the URL can create a film, so serve it over HTTPS and rotate keys if the URL is shared widely.</li>
+    </ul>
+  </div>
+</div>

@@ -2,47 +2,75 @@
 {% block title %}Settings · Property Video Studio{% endblock %}
 
 {% block content %}
-<div class="page-head">
+<div class="settings__hero">
   <div>
-    <p class="eyebrow">Setup</p>
+    <p class="eyebrow">Configuration</p>
     <h1>AI providers and voices</h1>
     <p class="lede">
-      Configure only the services you want to use. Template scripts and the built-in voices
-      work without any key or any cost.
+      Tune only the services you actually use. Template scripts and the built-in voices work
+      with no key and no cost — everything else is optional.
     </p>
   </div>
-  <a class="btn btn--ghost" href="/">Back to the generator</a>
+  <div class="settings__save">
+    <button type="button" class="btn btn--accent" id="save-settings">Save settings</button>
+    <span class="small muted" id="save-settings-result"></span>
+  </div>
 </div>
 
-<div class="settings-grid">
-  <div>
-    {% include "_provider_settings.html" %}
+<div class="settings">
+  <div class="settings__nav">
+    <p class="settings__nav-title">Sections</p>
+    <div class="settings__tabs" role="tablist" aria-label="Settings sections">
+      <button type="button" class="settings__tab" role="tab" data-settings-tab="ai" aria-selected="true">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3v3M12 18v3M4.5 12h3M16.5 12h3M6.7 6.7l2.1 2.1M15.2 15.2l2.1 2.1M17.3 6.7l-2.1 2.1M8.8 15.2l-2.1 2.1"/>
+          <circle cx="12" cy="12" r="3.4"/>
+        </svg>
+        <span>AI &amp; Script<small>Provider, model, key</small></span>
+      </button>
+      <button type="button" class="settings__tab" role="tab" data-settings-tab="voice" aria-selected="false">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="9" y="3" width="6" height="11" rx="3"/>
+          <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6"/>
+        </svg>
+        <span>Voice &amp; Narration<small>Engines, voices, speed</small></span>
+      </button>
+      <button type="button" class="settings__tab" role="tab" data-settings-tab="music" aria-selected="false">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 18V6l10-2v11"/><circle cx="6.5" cy="18" r="2.6"/><circle cx="16.5" cy="15" r="2.6"/>
+        </svg>
+        <span>Music &amp; Audio<small>Default level, library</small></span>
+      </button>
+      <button type="button" class="settings__tab" role="tab" data-settings-tab="general" aria-selected="false">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.56V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.56-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6h.09A1.7 1.7 0 0 0 10 3.04V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9v.09a1.7 1.7 0 0 0 1.56 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
+        </svg>
+        <span>General<small>Tone, health, privacy</small></span>
+      </button>
+    </div>
+
+    <div class="settings__tab-note">
+      <strong>What needs a key</strong>
+      Scripts and narration are optional upgrades. The template writer, Edge voices,
+      Windows speech and the studio scores all run without a key.
+    </div>
   </div>
 
-  <aside>
-    <section class="sheet">
-      <div class="sheet__head">
-        <div><h2>What needs a key</h2></div>
-      </div>
-      <ul class="small" style="margin:0;padding-left:18px;display:grid;gap:10px;color:var(--ink-3)">
-        <li><strong>Scripts.</strong> The template writer is built in and free. A Gemini or
-            OpenAI-compatible key unlocks AI-written scripts.</li>
-        <li><strong>Voice.</strong> Edge neural voices are free (internet required); the built-in
-            Windows voice works offline. Cloud voices are optional.</li>
-        <li><strong>Music.</strong> Always your own file. Nothing is generated or sourced for you.</li>
-      </ul>
+  <div class="settings__body">
+    <section class="settings__section is-active" id="settings-ai" role="tabpanel" aria-label="AI and script">
+      {% include "_settings_ai.html" %}
     </section>
-
-    <section class="sheet">
-      <div class="sheet__head">
-        <div><h2>Privacy</h2></div>
-      </div>
-      <p class="small muted" style="margin:0">
-        Keys are stored on the server, displayed only as a mask, and never sent to the browser.
-        Property photos and rendered videos stay on this server.
-      </p>
+    <section class="settings__section" id="settings-voice" role="tabpanel" aria-label="Voice and narration">
+      {% include "_settings_voice.html" %}
     </section>
-  </aside>
+    <section class="settings__section" id="settings-music" role="tabpanel" aria-label="Music and audio">
+      {% include "_settings_music.html" %}
+    </section>
+    <section class="settings__section" id="settings-general" role="tabpanel" aria-label="General">
+      {% include "_settings_general.html" %}
+    </section>
+  </div>
 </div>
 {% endblock %}
 

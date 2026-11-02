@@ -65,12 +65,11 @@ closing enquiry card. Note the music dips under the voice.
    > used instead — and the UI says which one you are looking at.”
    Read the headline, one caption, the CTA. Toggle narration on, press **Preview
    narration** to hear the voice.
-4. **Background music tab** — show the three modes.
-   > “Library, upload-once, or no music. There is no AI music generation: users
-   > bring their own track and are responsible for the rights. Volume slider,
-   > automatic ducking under speech, fade in/out, loop or trim.”
-   Pick the library track (upload `sample_data\music\relaxing-piano-cc0.mp3` once if
-   the library is empty), set volume ~35.
+4. **Background music tab** — show the four modes.
+   > “Three original soundtracks ship with the app, so a first video has music
+   > without hunting for a file. A library, an upload-once option and no music
+   > are all there too. Automatic ducking under speech, fades, loop or trim.”
+   Preview **Golden Hour**, keep it selected, set volume ~35.
 5. **Generate tab** — press **Generate video**. While it runs, narrate the stages:
    validate → images → script → narration → music → render → verify → ready.
    > “The verify stage actually decodes the finished file. A job that fails never

@@ -1,0 +1,109 @@
+<div class="sheet">
+  <div class="sheet__head">
+    <h2>Primary voice</h2>
+    <p>Narration is generated per scene and timed to the picture. Edge and Windows speech need no key.</p>
+  </div>
+
+  <div class="grid grid--2">
+    <div class="field">
+      <label for="tts-engine">Narration engine</label>
+      <select id="tts-engine">
+        {% for eid, engine in catalog.tts.items() %}
+          <option value="{{ eid }}" {{ 'selected' if settings.tts.engine == eid else '' }}>
+            {{ engine.label }}{{ ' — needs a key' if engine.requires_key else ' — free' }}
+          </option>
+        {% endfor %}
+      </select>
+      <p class="field__hint" id="tts-engine-note"></p>
+    </div>
+    <div class="field">
+      <label for="tts-voice">Voice</label>
+      <select id="tts-voice"></select>
+      <p class="field__hint">The selected voice is used for every scene in the film.</p>
+    </div>
+  </div>
+
+  <div class="btn-row" style="margin-top:14px">
+    <button type="button" class="btn btn--ghost btn--sm" id="tts-test">Preview voice</button>
+    <span class="test-out" id="tts-test-result">Generates a short sample with the engine above.</span>
+  </div>
+
+  <div class="provider-card reveal-block" id="cred-openai" style="margin-top:16px">
+    <div class="provider-card__head">
+      <h3>OpenAI text-to-speech</h3>
+      <span class="config-state" id="cred-openai-state">Not configured</span>
+    </div>
+    <div class="key-row">
+      <input type="password" data-secret-input="openai_tts" autocomplete="off" spellcheck="false"
+             placeholder="Paste your OpenAI speech key">
+      <button type="button" class="btn btn--primary btn--sm" data-save-secret="openai_tts">Save key</button>
+      <button type="button" class="btn btn--danger btn--sm" data-remove-secret="openai_tts">Remove</button>
+    </div>
+    <p class="status-line" data-secret="openai_tts"></p>
+    <p class="field__hint">Paid per character by OpenAI. Only used when OpenAI is the selected engine.</p>
+  </div>
+
+  <div class="provider-card reveal-block" id="cred-elevenlabs" style="margin-top:16px">
+    <div class="provider-card__head">
+      <h3>ElevenLabs</h3>
+      <span class="config-state" id="cred-elevenlabs-state">Not configured</span>
+    </div>
+    <div class="key-row">
+      <input type="password" data-secret-input="elevenlabs" autocomplete="off" spellcheck="false"
+             placeholder="Paste your ElevenLabs key">
+      <button type="button" class="btn btn--primary btn--sm" data-save-secret="elevenlabs">Save key</button>
+      <button type="button" class="btn btn--danger btn--sm" data-remove-secret="elevenlabs">Remove</button>
+    </div>
+    <p class="status-line" data-secret="elevenlabs"></p>
+    <p class="field__hint">The free tier includes a monthly character allowance.</p>
+  </div>
+
+  <div class="alert alert--info" id="tts-keyless-note" style="margin-top:16px">
+    <div>
+      <strong>No key needed.</strong> This engine is free to use. The first render may take a
+      moment while it connects.
+    </div>
+  </div>
+</div>
+
+<div class="sheet">
+  <div class="sheet__head">
+    <h2>Pacing and fallback</h2>
+    <p>Speech speed applies to every engine. A fallback is only used if the primary engine fails, and the result always says which voice spoke.</p>
+  </div>
+
+  <div class="grid grid--2">
+    <div class="field">
+      <label for="tts-fallback-engine">Fallback engine</label>
+      <select id="tts-fallback-engine">
+        <option value="none" {{ 'selected' if settings.tts.fallback_engine in ['', 'none'] else '' }}>None — just report the failure</option>
+        {% for eid, engine in catalog.tts.items() %}
+          <option value="{{ eid }}" {{ 'selected' if settings.tts.fallback_engine == eid else '' }}>{{ engine.label }}</option>
+        {% endfor %}
+      </select>
+      <p class="field__hint">Set to “None” if you would rather see an error than hear a different voice.</p>
+    </div>
+    <div class="field">
+      <label for="tts-speed">Speech speed</label>
+      <div class="range-row">
+        <input type="range" id="tts-speed" min="0.7" max="1.3" step="0.05" value="{{ settings.tts.speed }}">
+        <span class="range-value" id="tts-speed-value">{{ '%.2f'|format(settings.tts.speed) }}×</span>
+      </div>
+      <p class="field__hint">Around 1.00× suits most listing films.</p>
+    </div>
+  </div>
+
+  <details class="advanced">
+    <summary>Advanced</summary>
+    <div class="advanced__body">
+      <p class="field__hint" style="margin:0">
+        The studio stores one fallback voice per machine. If the fallback engine is a cloud
+        service, its key is still required — it appears above only while that engine is in use.
+      </p>
+      <p class="field__hint" style="margin:0">
+        A failed narration stops the render instead of shipping a silent film. You can always
+        switch narration off and render again.
+      </p>
+    </div>
+  </details>
+</div>
